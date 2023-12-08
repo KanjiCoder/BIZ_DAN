@@ -8,3 +8,11 @@
         BIZ_DAN
 
     Within git version control .
+
+    Josh's original game design document can be found here :
+    
+    TINY___URL[  tinyurl.com/BIZ-DAN-DOC                     ]
+    DIRECT_URL[ https://docs.google.com/document/d/          ]
+              [ 17ScjULCkAlwUL25J8IZivA9wkY2N8vyJY9C4rukMFxI ]
+              [ /edit#heading=h.egxez9bb8qj4                 ]
+    ATOMIC_IVY[ SEARCH_FOR[ _BUSINESS_MAN_DAN_ ]             ]

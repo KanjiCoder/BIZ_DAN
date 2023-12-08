@@ -1,3 +1,12 @@
-[gd_scene format=3 uid="uid://t2ws07vjjwnj"]
+[gd_scene load_steps=2 format=3 uid="uid://t2ws07vjjwnj"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_n5dmw"]
 
 [node name="n2d_main_scene_node" type="Node2D"]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="SPR_CLOUDS_256" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+texture = SubResource("ImageTexture_n5dmw")

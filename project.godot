@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="PROJECT_NAME_BIZ_DAN"
+run/main_scene="res://n2d_main_scene_node.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
 

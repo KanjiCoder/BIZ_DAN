@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://t2ws07vjjwnj"]
+
+[ext_resource type="Script" path="res://n2d_world.gd" id="1_7u3jx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nos56"]
+bg_color = Color(0.0470588, 0.541176, 0.972549, 1)
+
+[node name="N2D_WORLD" type="Node2D"]
+script = ExtResource("1_7u3jx")
+
+[node name="PAN_SCREEN_EDGES" type="Panel" parent="."]
+offset_right = 876.0
+offset_bottom = 2142.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nos56")

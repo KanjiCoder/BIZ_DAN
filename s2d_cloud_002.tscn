@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://hhm28km7w8d7"]
+
+[ext_resource type="Texture2D" uid="uid://buhu2qleu3864" path="res://ASS/CLOUD_002.PNG" id="1_tugfh"]
+[ext_resource type="Script" path="res://s2d_cloud_002.gd" id="2_kvvv4"]
+
+[node name="S2D_CLOUD_002" type="Sprite2D"]
+texture = ExtResource("1_tugfh")
+script = ExtResource("2_kvvv4")

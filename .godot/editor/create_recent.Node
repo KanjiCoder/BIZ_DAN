@@ -1,4 +1,5 @@
-Panel
 Sprite2D
+Node
+Panel
 ParallaxLayer
 ParallaxBackground

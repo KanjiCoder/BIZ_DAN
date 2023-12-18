@@ -1,0 +1,115 @@
+
+People can join the call , but we won't be streaming .
+You can read the notes though .
+
+    1. Y-axis cutoff point where no more clouds should
+       spawn . CYAN zone is the prep zone, the safe zone.
+
+    2. Wants CLOUDS TO SPAWN FIRST
+    
+    3. Wants GEESE TO SPAWN NEXT
+
+    GEESE + CLOUDS move at the same speed .
+
+    A little bit before the mountains start 
+    the clouds should stop . The geese should
+    also stop. 
+
+Game Length :
+
+    1 minute to 1 mintue and 30 seconds .
+    Don't need to be too picky , just need to get
+    the background scrolling slower.
+
+    LOCK TO PORTRAIT .
+
+    720_X_1280 is standard phone width .
+
+    Perferrably do not spawn clouds and geese on top of
+    each other .
+
+    ONE_SPAWNER , THAT SPAWNS EITHER A GOOSE OR A CLOUD ,
+    WHICH WILL PREVENT GEESE+CLOUD OVERLAP .
+
+    Make chance of goose spawning go up as 
+    time within the level progresses .
+
+    Dan just follows the mouse .
+    No drift . You control the player very tightly .
+    If you die , it is your fault.
+    Slide your thumb as fast as you can .
+    Tight control .
+
+    +-----------------+-----------------+
+    |                 |                 |
+    |  DAN_FRAME_001  |  DAN_FRAME_002  |
+    |                 |                 |
+    +-----------------+-----------------+
+    
+Extra Notes :
+
+    In business man dan , we have the intro
+    "Our flag means fun" thingy mobobber .
+    We need "splash screen" for startup of
+    the game .
+
+    SCREENS :
+
+        Splash Screen
+        Start  Menu :
+              +--------------------+
+              | Business Man Dan : |
+              |                    |
+              |                    |
+              |                    |
+              |      [ start ]     |
+              |      [ quit  ]     |
+              |                    |
+              |                    |
+              |                    |
+              |                    |
+              +--------------------+
+        Win    Menu
+        Loose  Menu
+    
+    NOTE : DESIGN UI TO BE ABLE TO BE USED WITH FAT FINGERS.
+         : OUR FOOD SUPPLY IS POISONED WITH CORN SYRUP
+         : AND WE ARE ALL FAT AND TIRED .
+    
+    VCR FONT
+     
+     
+    When Dan is ready to hit the hay , is Dan targeting
+    a[ 1/3 ]area of the ground? 
+
+        +----+----+----+  +--+----+------+
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        |              |  |              |
+        +    +----+    +  +  +----+      +
+        |    |HAAY|    |  |  |    |      |
+        +----+----+----+  +--+----+------+
+                               ^^
+                               ||
+                    +----------++----------------------+
+                    |   Hay Stack Is 1/3 of width of   |
+                    |   screen , but not necessarily   |
+                    |   aligned to exact 3rd slice .   |
+                    +----------------------------------+
+
+    "It's not free dopamine you fucking communist."
+
+
+    Only have ONE LAYER of GEESE and CLOUDS .
+
+    GEESE + CLOUDS scroll at SAME_SPEED .

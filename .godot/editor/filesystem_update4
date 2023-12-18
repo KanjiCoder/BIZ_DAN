@@ -1,8 +1,3 @@
 res://n2d_world.tscn
-res://nod_cloudcode.gd
-res://n2d_world.gd
 res://s2d_cloud_001.tscn
-res://s2d_cloud_001.gd
 res://s2d_cloud_002.tscn
-res://s2d_cloud_002.gd
-res://global_state.gd

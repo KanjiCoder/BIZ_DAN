@@ -1,9 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5r5g2yk12obh"]
+[gd_scene load_steps=4 format=3 uid="uid://c5r5g2yk12obh"]
 
 [ext_resource type="Texture2D" uid="uid://o1aeksep5bom" path="res://ASS/DAN.PNG" id="1_uupqm"]
 [ext_resource type="Script" path="res://n2d_dan.gd" id="2_2uvbo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8jdyj"]
+size = Vector2(89, 10)
 
 [node name="N2D_DAN" type="Sprite2D"]
 texture = ExtResource("1_uupqm")
 hframes = 2
 script = ExtResource("2_2uvbo")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(6.5, 5)
+shape = SubResource("RectangleShape2D_8jdyj")

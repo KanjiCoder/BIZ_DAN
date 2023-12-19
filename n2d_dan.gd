@@ -11,7 +11,7 @@ func DANMETHOD_animate_dan( ) :
 		fucking_frame_property_value += 1
 		fucking_frame_property_value =( fucking_frame_property_value % 2 )
 		self.frame =( fucking_frame_property_value )
-		print( self.frame )
+		##p_rint( self.frame )
 		pass
 
 func _physics_process( _delta ) :

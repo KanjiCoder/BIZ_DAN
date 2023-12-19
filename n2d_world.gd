@@ -8,7 +8,8 @@ extends Node2D
 ################################################################# TODO_NOTES ###
 ### MAINCODE ##################################################--###############
 
-@onready var nod_dancode = get_node( "NOD_DANCODE" )
+@onready var nod_dancode    = get_node( "NOD_DANCODE"    )
+@onready var nod_configcode = get_node( "NOD_CONFIGCODE" )
 
 var WORLDDATA_has_process_been_hit_at_least_once : int =( 0 )
 
@@ -50,7 +51,7 @@ var WORLDDATA_psr_background : PackedScene = preload( "res://s2d_background.tscn
 var WORLDDATA_s2d_background : Sprite2D = null 
 var WORLDDATA_percent_scroll : float = 0
 ### WORLDDATA_percent_scroll_per_frame : float = 0    #### USE : WORLDDATA_game_duration_in_ticks ##
-var WORLDDATA_game_duration_in_minutes : float = 1.0
+### WORLDDATA_game_duration_in_minutes : float = 1.5
 var WORLDDATA_game_duration_in_ticks   : int   =( 0 ) #### CALCULATED ####
 var WORLDDATA_game_time_in_ticks       : int   =( 0 ) #### CALCULATED ####
 pass
@@ -86,7 +87,8 @@ pass
 ### WORLDFUNC #################################################--###############
 func WORLDFUNC_ready( ):
 	var fps =( 60 )
-	WORLDDATA_game_duration_in_ticks =int( WORLDDATA_game_duration_in_minutes * 60 * fps )
+	var minutes = nod_configcode.CONFIGDATA_game_duration_in_minutes
+	WORLDDATA_game_duration_in_ticks =int( minutes * 60 * fps )
 
 
 func WORLDFUNC_process_physics( ):

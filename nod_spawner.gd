@@ -1,6 +1,7 @@
 extends Node
 @onready var nod_cloudcode = get_node("/root/N2D_WORLD/NOD_CLOUDCODE")
 @onready var nod_birdcode  = get_node("/root/N2D_WORLD/NOD_BIRDCODE")
+@onready var nod_configcode= get_node("/root/N2D_WORLD/NOD_CONFIGCODE")
 
 ##    .----1----2----3----4----5----.    ##
 ##  [___][_1_][_2_][_3_][_4_][_5_][___]  ##
@@ -18,20 +19,31 @@ func SPAWNFUNC_zero_for_cloud_one_for_bird( ) :
 	var c0_b1 =( randi_range( 0,1 ))
 	return( c0_b1 )
 	
+## DEPRECATED FUNCTION , SEE : SPAWNFUNC_spawn_0none_1cloud_2bird ##
 func SPAWNFUNC_spawn_bird_or_cloud( ) :
 	var spawn_per = SPAWNFUNC_get_next_spawn_percent( )
 	## nod_cloudcode.CLOUDFUNC_ping()
 	## p_rint( "[_spawn_per_]" , spawn_per )
-	var c0_b1 = SPAWNFUNC_zero_for_cloud_one_for_bird()
-	if( c0_b1 == 0 ) : nod_cloudcode.CLOUDFUNC_spawn_cloud_by_percent( spawn_per )
-	if( c0_b1 == 1 ) : nod_birdcode.BIRDFUNC_spawn_goose_by_percent( spawn_per )
+	var b0_c1 = SPAWNFUNC_zero_for_cloud_one_for_bird()
+	if( b0_c1 == 1 ) : nod_birdcode.BIRDFUNC_spawn_goose_by_percent( spawn_per )
+	if( b0_c1 == 0 ) : nod_cloudcode.CLOUDFUNC_spawn_cloud_by_percent( spawn_per )
+	pass
+	
+func SPAWNFUNC_spawn_0none_1cloud_2bird( ) :
+	var spawn_per  = SPAWNFUNC_get_next_spawn_percent( )
+	var spawn_enum = nod_configcode.CONFIGFUNC_0none_1cloud_2goose()
+	var n0_c1_b2 = ( spawn_enum ) ## nothing:0 , clouds:1 , birds:2
+	if( n0_c1_b2 == 0 ) : pass
+	if( n0_c1_b2 == 1 ) : nod_cloudcode.CLOUDFUNC_spawn_cloud_by_percent( spawn_per )
+	if( n0_c1_b2 == 2 ) : nod_birdcode.BIRDFUNC_spawn_goose_by_percent(   spawn_per )
 	pass
 	
 func _physics_process( _delta ) :
 	spawn_tick_cooldown -= 1
 	if( spawn_tick_cooldown <= 0 ) :
 		spawn_tick_cooldown = spawn_tick_wait_time
-		SPAWNFUNC_spawn_bird_or_cloud( )
+		SPAWNFUNC_spawn_0none_1cloud_2bird()
+	##  SPAWNFUNC_spawn_bird_or_cloud( )
 	##  SPAWNFUNC_spawn_cloud_or_bird <-- WRONG, USE ALPHABETICAL !!
 	pass
 

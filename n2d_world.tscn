@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://t2ws07vjjwnj"]
+[gd_scene load_steps=7 format=3 uid="uid://t2ws07vjjwnj"]
 
 [ext_resource type="Script" path="res://n2d_world.gd" id="1_7u3jx"]
 [ext_resource type="Script" path="res://nod_cloudcode.gd" id="2_elb6h"]
+[ext_resource type="Script" path="res://nod_birdcode.gd" id="3_4ibhh"]
+[ext_resource type="Script" path="res://nod_spawner.gd" id="4_wxo57"]
+[ext_resource type="Script" path="res://nod_dancode.gd" id="5_q42nr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nos56"]
 bg_color = Color(0.0470588, 0.541176, 0.972549, 1)
@@ -16,3 +19,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nos56")
 
 [node name="NOD_CLOUDCODE" type="Node" parent="."]
 script = ExtResource("2_elb6h")
+
+[node name="NOD_BIRDCODE" type="Node" parent="."]
+script = ExtResource("3_4ibhh")
+
+[node name="NOD_SPAWNER" type="Node" parent="."]
+script = ExtResource("4_wxo57")
+
+[node name="NOD_DANCODE" type="Node" parent="."]
+script = ExtResource("5_q42nr")

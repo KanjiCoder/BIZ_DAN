@@ -8,6 +8,8 @@ extends Node2D
 ################################################################# TODO_NOTES ###
 ### MAINCODE ##################################################--###############
 
+@onready var nod_dancode = get_node( "NOD_DANCODE" )
+
 var WORLDDATA_has_process_been_hit_at_least_once : int =( 0 )
 
 # Called when the node enters the scene tree for the first time.
@@ -23,7 +25,8 @@ func _ready():
 	pass
 	## SCREENCODE_hide_screen_edge_panel()
 	pass # Replace with function body.
-
+	## p_rint( "[_N2D_WORLD_SAYS_:_DAN_VAR_]" , nod_dancode.dan_var )
+	nod_dancode.DANFUNC_spawn_dan_at_start_position()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process( _delta ):

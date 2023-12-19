@@ -1,3 +1,14 @@
 res://n2d_world.tscn
 res://s2d_cloud_001.tscn
 res://s2d_cloud_002.tscn
+res://nod_birdcode.gd
+res://s2d_goose.tscn
+res://s2d_goose.gd
+res://nod_spawner.gd
+res://s2d_cloud_001.gd
+res://nod_cloudcode.gd
+res://s2d_cloud_002.gd
+res://n2d_world.gd
+res://nod_dancode.gd
+res://n2d_dan.tscn
+res://n2d_dan.gd

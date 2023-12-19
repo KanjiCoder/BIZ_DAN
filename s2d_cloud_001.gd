@@ -2,7 +2,7 @@ extends Sprite2D
 
 ## @onready var n2d_world = get_node( "N2D_WORLD" )
 @onready var n2d_world : Node2D = get_tree().root.get_child(0)
-var cloudspeed : int = 1
+var cloudspeed : int = 3
 
 func _physics_process( _delta ):
 	offset.y -= cloudspeed
@@ -11,8 +11,8 @@ func _physics_process( _delta ):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print( n2d_world.WORLDDATA_has_process_been_hit_at_least_once )
-	cloudspeed = randi_range( 1 , 3 )
+	## print( n2d_world.WORLDDATA_has_process_been_hit_at_least_once )
+	## cloudspeed = randi_range( 1 , 3 )
 	pass # Replace with function body.
 
 

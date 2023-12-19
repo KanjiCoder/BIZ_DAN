@@ -1,6 +1,6 @@
 extends Sprite2D
 
-var cloudspeed : int =( 1 )
+var cloudspeed : int =( 3 )
 
 func _physics_process( _delta ) :
 	offset.y -= cloudspeed
@@ -9,7 +9,7 @@ func _physics_process( _delta ) :
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	cloudspeed = randi_range( 1 , 3 )
+	## cloudspeed = randi_range( 1 , 3 )
 	pass # Replace with function body.
 
 

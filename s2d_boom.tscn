@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpevhd10lsglq"]
+
+[ext_resource type="Texture2D" uid="uid://bijplop7so8mh" path="res://ASS/SPR_EXPLOSION_XL_STRIP11.PNG" id="1_3dfsg"]
+[ext_resource type="Script" path="res://s2d_boom.gd" id="2_4t0h3"]
+
+[node name="S2D_BOOM" type="Sprite2D"]
+texture = ExtResource("1_3dfsg")
+hframes = 11
+script = ExtResource("2_4t0h3")

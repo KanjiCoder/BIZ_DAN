@@ -10,8 +10,8 @@ func BIRDFUNC_spawn_goose_by_percent( percent_x ) :
 	var client_area : Vector2i = DisplayServer.window_get_size( 0 )
 	var spawn_pos_y =(  client_area.y + 128 ) ## goose fully off screen ##
 	var spawn_pos_x =(float( client_area.x - 1 ))*(float(percent_x))
-	s2d_goose.offset.x =( spawn_pos_x )
-	s2d_goose.offset.y =( spawn_pos_y )
+	s2d_goose.position.x =( spawn_pos_x )
+	s2d_goose.position.y =( spawn_pos_y )
 	n2d_world.add_child( s2d_goose )
 
 func _physics_process( _delta ):

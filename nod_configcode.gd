@@ -11,9 +11,12 @@ extends Node
 ## 90 / 5 === 18 , we need 18 sectors to configure
 ## the probability of GOOSE or CLOUD .
 
+var CONFIGDATA_maximum_goose_override   : bool = true  ## FOR_DEBUG_ONLY ##
+var CONFIGDATA_start_with_3_seconds_left : bool = true  ## FOR_DEBUG_ONLY ##
+
 var CONFIGDATA_game_duration_in_minutes : float = 1.5
 var CONFIGDATA_prob_cloud =[ 0 , 1,1,1,1  , 9,8,7,6 , 5,4,3,2 , 1,0,0,0  , 0 ]
-var CONFIGDATA_prob_goose =[ 1 , 0,0,0,0  , 1,2,3,4 , 5,6,7,8 , 9,1,1,1  , 0 ]
+var CONFIGDATA_prob_goose =[ 0 , 0,0,0,0  , 1,2,3,4 , 5,6,7,8 , 9,1,1,1  , 0 ]
 var CONFIGDATA_prob_length =( 18 ) ## 18 elements in probability array ##
 
 func CONFIGFUNC_0none_1cloud_2goose( ) :
@@ -39,6 +42,9 @@ func CONFIGFUNC_0none_1cloud_2goose( ) :
 		var r_i =( randi_range( 1 , prob_total ))
 		if( r_i <= prob_cloud ) : spawn_enum = 1
 	pass
+	if( CONFIGDATA_maximum_goose_override ) :
+		spawn_enum =( 2 )
+	
 	return spawn_enum 
 	
 # Called when the node enters the scene tree for the first time.

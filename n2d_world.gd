@@ -1,17 +1,42 @@
 extends Node2D
 ### TODO_NOTES #################################################################
 ###
+### TODO_001 :
 ### You need to know when to use[ WINDOW_SIZE ]and when to use[ SCREEN_SIZE ].
 ### Some of your calculations are off because you need to use the CLIENT_AREA
 ### [ WINDOW_SIZE ]and not the scree_size .
 ###
+### TODO_002 : RESET_FUNCTIONALITY , and bind it to "R" key for DEBUG
+### TODO_003 : Move Dan Using The Mouse
+### TODO_004 : Random X Spawn Position For Hay 
+### TODO_005 : Win Game When Hit Hay , Lose Game If Not Hit Hay
+### TODO_006 : Animate Hay Scrolling Into Focus , probably can do this by
+###		     : parenting the hay to the background image , and then
+### 		 : modifying background code scroll to use[ .position ]
+### 		 : instead of[ .offset ]
+###
 ################################################################# TODO_NOTES ###
+### MORE_WORLD_DATA ############################################################
+
+var WORLDDATA_has_hay : bool = false 
+var WORLDDATA_s2d_hay : Sprite2D = null 
+@onready var WORLDDATA_psr_hay : PackedScene = preload( "res://s2d_hay.tscn" )
+
+### ######################################################## MORE_WORLD_DATA ###
+### FUCKING_HACKS ##############################################################
+
+var DANDATA_s2d_dan : Sprite2D = null 
+
+############################################################## FUCKING_HACKS ###
 ### MAINCODE ##################################################--###############
 
 @onready var nod_dancode    = get_node( "NOD_DANCODE"    )
 @onready var nod_configcode = get_node( "NOD_CONFIGCODE" )
 
 var WORLDDATA_has_process_been_hit_at_least_once : int =( 0 )
+
+func  WORLDCODE_reset_and_start_level( ) :
+	print( "[n2d_world.gd:Reset_And_Start_Level]")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -86,12 +111,29 @@ pass
 ###############--################################################ SCREENCODE ###
 ### WORLDFUNC #################################################--###############
 func WORLDFUNC_ready( ):
+	if( nod_configcode.CONFIGDATA_start_with_3_seconds_left ) :
+		nod_configcode.CONFIGDATA_game_duration_in_minutes =( 3.0/60.0 )
+		
 	var fps =( 60 )
 	var minutes = nod_configcode.CONFIGDATA_game_duration_in_minutes
 	WORLDDATA_game_duration_in_ticks =int( minutes * 60 * fps )
 
+## Call this to move dan to the ground where hopefully he will
+## intersect with the hay stack .
+func WORLDFUNC_process_physics_falltime( ):
+	if( false == WORLDDATA_has_hay ) :
+		WORLDDATA_s2d_hay = WORLDDATA_psr_hay.instantiate()
+		WORLDDATA_has_hay = true
+		var client_area : Vector2i = DisplayServer.window_get_size( 0 )
+		var hay_hig : float = WORLDDATA_s2d_hay.texture.get_height()
+		WORLDDATA_s2d_hay.position.x =( client_area.x / 2 )
+		WORLDDATA_s2d_hay.position.y =( client_area.y - (hay_hig/2) )
+		WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_hay )
+		
+	pass
 
 func WORLDFUNC_process_physics( ):
+	INPUTCODE_reset_key_cooldown -=( 1 )
 	WORLDDATA_game_time_in_ticks +=( 1 )
 	if( WORLDDATA_game_time_in_ticks >= WORLDDATA_game_duration_in_ticks ) :
 		WORLDDATA_game_time_in_ticks  = WORLDDATA_game_duration_in_ticks
@@ -109,6 +151,9 @@ func WORLDFUNC_process_physics( ):
 	##p_rint( "[_bg_offset_end_____]:" , WORLDDATA_background_offset_end ) ## LOOKS_GOOD
 	##p_rint( WORLDDATA_percent_scroll ) <-- LOOKS_GOOD
 	pass
+	if( WORLDDATA_percent_scroll >= 1) :
+		##p_rint( "[n2d_world.gd:_TIME_TO_FALL_]")
+		WORLDFUNC_process_physics_falltime()
 
 func WORLDFUNC_update_world_object_scales( ) :
 	var bg_wid : float = WORLDDATA_s2d_background.texture.get_width()
@@ -228,7 +273,25 @@ func SCREENCODE_toggle_full_screen_on_off() :
 ###############--################################################ SCREENCODE ###
 ### INPUTCODE #################################################--###############
 
+var INPUTCODE_reset_key_cooldown : int = 0 
+
+func _input(event):
+   # Mouse in viewport coordinates.
+	if event is InputEventMouseButton:
+		## p_rint("Mouse Click/Unclick at: ", event.position)
+		pass
+	elif event is InputEventMouseMotion:
+		print("Mouse Motion at: ", event.position)
+		pass
+		if( null != DANDATA_s2d_dan ) :
+			DANDATA_s2d_dan.position.x = event.position.x
+	##	## p_rint("Mouse Motion at: ", event.position)
+
 func INPUTCODE_main_outermost_input_handler( ) :
+	if Input.is_key_pressed( KEY_R ) :
+		if( INPUTCODE_reset_key_cooldown <= 0 ) :
+			WORLDCODE_reset_and_start_level()
+			INPUTCODE_reset_key_cooldown = 15 
 	if Input.is_key_pressed( KEY_F ) :
 		if( SCREENCODE_full_screen_cooldown <= 0 ) :
 			SCREENCODE_full_screen_cooldown = 100

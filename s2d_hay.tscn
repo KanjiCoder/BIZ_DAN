@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://3gysk4e1n8yq"]
+
+[ext_resource type="Texture2D" uid="uid://ds3rr86gpoxhn" path="res://ASS/HAY.PNG" id="1_gbn34"]
+
+[node name="S2D_HAY" type="Sprite2D"]
+texture = ExtResource("1_gbn34")

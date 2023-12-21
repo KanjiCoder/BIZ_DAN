@@ -15,7 +15,8 @@ script = ExtResource("2_gqdft")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="A2D_GOOSE"]
 position = Vector2(0.5, 2.5)
 shape = SubResource("RectangleShape2D_8okvh")
+debug_color = Color(0.505882, 1, 0.25098, 1)
 
-[connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a_2d_goose_body_entered"]
 [connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a2d_goose_body_entered"]
+[connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a_2d_goose_body_entered"]
 [connection signal="body_shape_entered" from="A2D_GOOSE" to="." method="_on_a2d_goose_body_shape_entered"]

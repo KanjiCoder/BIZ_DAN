@@ -1,4 +1,7 @@
 extends Sprite2D
+### ################################################## ###
+### GOOSE COLLISION HANDLER IS IN [ s2d_goose ] Script ###
+### ################################################## ###
 
 var fucking_frame_property_value =( 0 )
 var held_frames =( 3 ) ## ZERO OR LOWER MAKES ZERO SENSE ! ##
@@ -15,6 +18,14 @@ func DANMETHOD_animate_dan( ) :
 		pass
 
 func _physics_process( _delta ) :
+	##if( self.offset.x != 0 ) :
+	##	self.position.x = self.offset.x
+	##	self.offset.x = 0
+	##if( self.offset.y != 0 ) :
+	##	self.position.y = self.offset.y
+	##	self.offset.y = 0
+		
+	
 	DANMETHOD_animate_dan()
 
 # Called when the node enters the scene tree for the first time.

@@ -49,6 +49,10 @@ func CLOUDFUNC_cloud_spawner_process_physics() :
 	if( 0 == r_i ) : CLOUDFUNC_spawn_cloud_001()
 	if( 1 == r_i ) : CLOUDFUNC_spawn_cloud_002()
 	pass
+
+func CLOUDFUNC_INI( ):
+	print( "[_CLOUDFUNC_INI_]" )
+	pass
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():

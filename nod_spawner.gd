@@ -12,6 +12,9 @@ var spawns_per_second =( 1 ) ## Number of spawned items per second ##
 var spawn_tick_wait_time =( SPAWNFUNC_calc_spawn_tick_wait_time() )
 var spawn_tick_cooldown  =( 0 )
 
+func SPAWNFUNC_INI( ):
+	pass
+
 ## Somewhat random , but should eventually be weighted so that
 ## the longer the level progresses, the more likely that you
 ## are going to spawn a[ GOOSE ]instead of a[ CLOUD ].

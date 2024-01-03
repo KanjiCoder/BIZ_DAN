@@ -1,0 +1,34 @@
+
+RIGHT_NOW_THE_ONLY_THING_YOU_NEED_TO_KNOW_IS :
+
+    git pull git_lab master
+
+MUST KNOW :
+
+    001 : git status
+    002 : git clone https://gitlab.com/KANJICODER/BIZ_DAN.git
+
+    003 : git add .
+        : This is like , putting your files into a carboard box .
+        : The box is still fucking open, got to finalize it
+        : with some duct tape .
+
+    004 : git commit -m " duct tape the box of stuff " 
+    005 : git push  GIT_LAB  master
+    006 : git fetch && git status
+    007 : git pull  GIT_LAB  master
+
+ONE_TIME_SETUP_STUFF :
+
+    001 :   git config --global user.emal "kanjicoder@gmail.com"
+    002 :   git config --global user.name "Your Name Or Something"
+    003 :   git remote -v
+    004 :   git remote add GIT_LAB  https://gitlab.com/KANJICODER/BIZ_DAN.git
+
+NICE TO KNOW :
+
+    001 : ls
+    002 : clear
+    003 : cd ./BIZ_DAN
+    004 : git remote remove REMOTE_ALIAS_HERE
+    005 : git fetch

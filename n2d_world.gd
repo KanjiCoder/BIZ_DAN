@@ -20,7 +20,34 @@ extends Node2D
 
 var WORLDDATA_has_hay : bool = false 
 var WORLDDATA_s2d_hay : Sprite2D = null 
+var WORLDDATA_hay_is_visible : int =( 0 )
+
 @onready var WORLDDATA_psr_hay : PackedScene = preload( "res://s2d_hay.tscn" )
+
+var WORLDDATA_array_goose_length =( 0 )
+var WORLDDATA_array_goose     = [ null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								]
+var WORLDDATA_array_explosion_length =( 0 )
+var WORLDDATA_array_explosion = [ null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								]
 
 ### ######################################################## MORE_WORLD_DATA ###
 ### FUCKING_HACKS ##############################################################
@@ -30,29 +57,29 @@ var DANDATA_s2d_dan : Sprite2D = null
 ############################################################## FUCKING_HACKS ###
 ### MAINCODE ##################################################--###############
 
-@onready var nod_dancode    = get_node( "NOD_DANCODE"    )
 @onready var nod_configcode = get_node( "NOD_CONFIGCODE" )
+@onready var nod_cloudcode  = get_node( "NOD_CLOUDCODE"  )
+@onready var nod_birdcode   = get_node( "NOD_BIRDCODE"   )
+@onready var nod_spawncode  = get_node( "NOD_SPAWNER"    )
+@onready var nod_dancode    = get_node( "NOD_DANCODE"    )
 
 var WORLDDATA_has_process_been_hit_at_least_once : int =( 0 )
 
+func  WORLDFUNC_you_died( ) :
+	print( "[_WORLD_CODE_YOU_DIED_]" )
+	WORLDCODE_reset_and_start_level()
+	pass
+
 func  WORLDCODE_reset_and_start_level( ) :
 	print( "[n2d_world.gd:Reset_And_Start_Level]")
+	nod_birdcode.BIRDFUNC_free_all_the_fucking_geese()
+	WORLDFUNC_ready() 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	print( "[_N2D_WORLD_CODE_READY_FUNCTION_CALLED_]" )
 	WORLDFUNC_ready()
-	WORLDDATA_s2d_background = WORLDDATA_psr_background.instantiate()
-	WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_background )
-	pass
-	_on_viewport_size_changed()
-	get_tree().root.connect("size_changed", _on_viewport_size_changed )
-	pass
-	pass
-	## SCREENCODE_hide_screen_edge_panel()
-	pass # Replace with function body.
-	## p_rint( "[_N2D_WORLD_SAYS_:_DAN_VAR_]" , nod_dancode.dan_var )
-	nod_dancode.DANFUNC_spawn_dan_at_start_position()
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process( _delta ):
@@ -74,11 +101,12 @@ pass
 var WORLDDATA_n2d_world : Node2D = self 
 var WORLDDATA_psr_background : PackedScene = preload( "res://s2d_background.tscn" )
 var WORLDDATA_s2d_background : Sprite2D = null 
+var WORLDDATA_s2d_background_count : int =( 0 )
 var WORLDDATA_percent_scroll : float = 0
 ### WORLDDATA_percent_scroll_per_frame : float = 0    #### USE : WORLDDATA_game_duration_in_ticks ##
 ### WORLDDATA_game_duration_in_minutes : float = 1.5
 var WORLDDATA_game_duration_in_ticks   : int   =( 0 ) #### CALCULATED ####
-var WORLDDATA_game_time_in_ticks       : int   =( 0 ) #### CALCULATED ####
+var WORLDDATA_game_time_in_ticks       : int ## SET_IN_INITIALIZER ##
 pass
 ## Min/Max vertical offset .
 ##  WORLDDATA_background_min_offset <-- USE[ offset_start ]
@@ -110,7 +138,16 @@ var SCREENCODE_full_screen_cooldown : int =( 0 )
 pass
 ###############--################################################ SCREENCODE ###
 ### WORLDFUNC #################################################--###############
-func WORLDFUNC_ready( ):
+
+func WORLDFUNC_err( i_err_msg : String ) :
+	print( "[_WORLDFUNC_ERROR_]:" , i_err_msg )
+	pass
+
+func WORLDFUNC_INI():
+
+	WORLDDATA_game_time_in_ticks =( 0 )
+	WORLDFUNC_hay_hide( ) ## Hide hay stack at start of game ###
+
 	if( nod_configcode.CONFIGDATA_start_with_3_seconds_left ) :
 		nod_configcode.CONFIGDATA_game_duration_in_minutes =( 3.0/60.0 )
 		
@@ -118,9 +155,52 @@ func WORLDFUNC_ready( ):
 	var minutes = nod_configcode.CONFIGDATA_game_duration_in_minutes
 	WORLDDATA_game_duration_in_ticks =int( minutes * 60 * fps )
 
-## Call this to move dan to the ground where hopefully he will
-## intersect with the hay stack .
-func WORLDFUNC_process_physics_falltime( ):
+	##__REFACTORED_INTO_READY__#################################
+
+	if( null == WORLDDATA_s2d_background ):
+		WORLDDATA_s2d_background = WORLDDATA_psr_background.instantiate()
+		WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_background )
+		WORLDDATA_s2d_background_count +=( 1 )
+		if( WORLDDATA_s2d_background_count > 1 ) :
+			WORLDFUNC_err( "[_TOO_MANY_BACKGROUNDS_]" )
+		pass
+	pass
+	_on_viewport_size_changed()
+	get_tree().root.connect("size_changed", _on_viewport_size_changed )
+	pass
+	pass
+	## SCREENCODE_hide_screen_edge_panel()
+	pass # Replace with function body.
+	## p_rint( "[_N2D_WORLD_SAYS_:_DAN_VAR_]" , nod_dancode.dan_var )
+	## nod_dancode.DANFUNC_spawn_dan_at_start_position()
+	## nod_dancode.DANFUNC_ready( )
+
+	#################################__REFACTORED_INTO_READY__##
+
+
+func WORLDFUNC_ready( ):
+
+	self.            WORLDFUNC_INI()
+	nod_configcode. CONFIGFUNC_INI()
+	nod_cloudcode.   CLOUDFUNC_INI()
+	nod_spawncode.   SPAWNFUNC_INI()
+	nod_dancode.       DANFUNC_INI()
+
+ 
+func WORLDFUNC_hay_hide() :
+
+	## ABOUT FUNCTION : INSTANTLY HIDES HAY STACK IF EXISTS ####
+
+	if( false == WORLDDATA_has_hay ) :
+		pass ## do nothing
+	if( true  == WORLDDATA_has_hay ) :
+		WORLDDATA_hay_is_visible =( 0 )
+		WORLDDATA_s2d_hay.visible = false
+
+func WORLDFUNC_hay_show() :
+
+	## ABOUT_FUNCTION : ANIMATES THE APPEARANCE OF HAY STACK ###
+
 	if( false == WORLDDATA_has_hay ) :
 		WORLDDATA_s2d_hay = WORLDDATA_psr_hay.instantiate()
 		WORLDDATA_has_hay = true
@@ -129,6 +209,17 @@ func WORLDFUNC_process_physics_falltime( ):
 		WORLDDATA_s2d_hay.position.x =( client_area.x / 2 )
 		WORLDDATA_s2d_hay.position.y =( client_area.y - (hay_hig/2) )
 		WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_hay )
+	if( 0 == WORLDDATA_hay_is_visible ) :
+		WORLDDATA_hay_is_visible  =( 1 )
+		WORLDDATA_s2d_hay.visible = true 
+		pass
+
+
+## Call this to move dan to the ground where hopefully he will
+## intersect with the hay stack .
+func WORLDFUNC_process_physics_falltime( ):
+
+	WORLDFUNC_hay_show() ## Show the hay , but animate into frame ##
 		
 	pass
 
@@ -281,7 +372,7 @@ func _input(event):
 		## p_rint("Mouse Click/Unclick at: ", event.position)
 		pass
 	elif event is InputEventMouseMotion:
-		print("Mouse Motion at: ", event.position)
+		## print("Mouse Motion at: ", event.position)
 		pass
 		if( null != DANDATA_s2d_dan ) :
 			DANDATA_s2d_dan.position.x = event.position.x
@@ -350,3 +441,10 @@ func INPUTCODE_main_outermost_input_handler( ) :
 ## max_os = max_os + ( VP.hig / 2 )                           ##
 ##                                                            ##
 ################################################################
+##__REFACTORED_INTO_READY__#####################################
+##                                                            ##
+##  Code refactored into the WORLDFUNC_ready() function       ##
+##  so that we can easily do a reset of the game state .      ##
+##                                                            ##
+##                                                            ##
+#####################################__REFACTORED_INTO_READY__##

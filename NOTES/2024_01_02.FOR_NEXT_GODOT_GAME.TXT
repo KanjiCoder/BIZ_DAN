@@ -1,0 +1,31 @@
+
+    NOTES FOR NEXT GAME :
+
+    1. Create 1 monolithic file will sections :
+
+        __CONST__
+
+                    c_some_const_define_macro_here
+                    ( or immutable data if no #define )
+
+        __DATA___
+
+                    d_some_data_name_here
+
+        __FUNC___  <-- Static functions , NOT METHODS
+
+                    F_SOMEUTILITY_DOTHETHING()
+
+        __METHOD__ <-- functions that are procedural 
+                       implementations of member methods
+                       within object scripts
+
+                       EXAMPLE :
+                       F_DANMETHODS_KILL( ) <-- Kill Dan
+
+                       Probably use "F_" for function rather
+                       than "M_" for method , to avoid 
+                       over proliferation of prefixes .
+
+                       And to not get confused with m_ for
+                       "member of struct" variable .

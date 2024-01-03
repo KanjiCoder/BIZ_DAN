@@ -19,6 +19,12 @@ var CONFIGDATA_prob_cloud =[ 0 , 1,1,1,1  , 9,8,7,6 , 5,4,3,2 , 1,0,0,0  , 0 ]
 var CONFIGDATA_prob_goose =[ 0 , 0,0,0,0  , 1,2,3,4 , 5,6,7,8 , 9,1,1,1  , 0 ]
 var CONFIGDATA_prob_length =( 18 ) ## 18 elements in probability array ##
 
+func CONFIGFUNC_INI( ):
+	var l_e_n = CONFIGDATA_prob_length 
+	if( CONFIGDATA_prob_cloud.size() != l_e_n ) : error_string( 1 ) 
+	if( CONFIGDATA_prob_goose.size() != l_e_n ) : error_string( 2 ) 
+	pass # Replace with function body.
+
 func CONFIGFUNC_0none_1cloud_2goose( ) :
 	## Use tilemap math to abstract each "probability cell" as a cell
  	## with a width of 10 units , and then use tilemap math to figure
@@ -49,10 +55,7 @@ func CONFIGFUNC_0none_1cloud_2goose( ) :
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var l_e_n = CONFIGDATA_prob_length 
-	if( CONFIGDATA_prob_cloud.size() != l_e_n ) : error_string( 1 ) 
-	if( CONFIGDATA_prob_goose.size() != l_e_n ) : error_string( 2 ) 
-	pass # Replace with function body.
+	pass ## Use CONFIGFUNC_INI
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

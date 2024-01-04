@@ -7,16 +7,22 @@ var goose_speed : int = 3
 var m_manager_index : int =( 0-1 )
 
 func _on_a2d_goose_body_entered( body ):
-	print( "[_NEXT_TIME_GOOSE_COLLISION_CODE_HERE_]" )
-	var s2d_boom = psr_boom.instantiate()
-	s2d_dan =( n2d_world.DANDATA_s2d_dan )
-	s2d_boom.position.x =( s2d_dan.position.x )
-	s2d_boom.position.y =( s2d_dan.position.y )
-	n2d_world.add_child( s2d_boom )
 
-	## TODO HERE : _DAN_SHOULD_HAVE_INVINCIBLE_PERIOD_SO_WE_DONT_CALL_DIE_FUNCTION_REPEATEDLY_
-	var nod_dancode = n2d_world.nod_dancode
-	n2d_world.WORLDFUNC_you_died()
+	if( n2d_world.WORLDDATA_invincible_grace_period_countdown >= 1 ) :
+		return ## DO NOT INTERACT IF INVINCIBLE PERIOD ##
+
+	print( "[_NEXT_TIME_GOOSE_COLLISION_CODE_HERE_]" )
+	## var s2d_boom = psr_boom.instantiate()
+	## s2d_dan =( n2d_world.DANDATA_s2d_dan )
+	## s2d_boom.position.x =( s2d_dan.position.x )
+	## s2d_boom.position.y =( s2d_dan.position.y )
+	## n2d_world.add_child( s2d_boom )
+	s2d_dan =( n2d_world.DANDATA_s2d_dan )
+	n2d_world.nod_dancode.DANFUNC_kill_dan_with_explosion( s2d_dan )
+
+	## This should be inside of the "KILL_DAN" function ##
+	## var nod_dancode = n2d_world.nod_dancode
+	## n2d_world.WORLDFUNC_you_died()
 	
 	pass # Replace with function body.
 

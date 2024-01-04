@@ -7,6 +7,12 @@ var BIRDDATA_psr_goose_001 : PackedScene = preload( "res://s2d_goose.tscn")
 func BIRDFUNC_free_all_the_fucking_geese( ) :
 	for _i_ in range( 0 , (100-1) ) :
 		print( "[_TODO_FREE_ALL_THE_GEESE_]" )
+		var quantum_goose =( n2d_world.WORLDDATA_array_goose[ _i_ ] )
+		if( null == quantum_goose ) :
+			pass ## No object to free , so don't ##
+		else :
+			n2d_world.WORLDDATA_array_goose[ _i_ ] =( null )
+			quantum_goose.queue_free( )
 
 
 func BIRDFUNC_add_goose_to_manager_array( s2d_goose ):

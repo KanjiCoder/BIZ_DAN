@@ -1,9 +1,10 @@
 res://s2d_hay.tscn
-res://n2d_world.gd
 res://n2d_world.tscn
-res://nod_dancode.gd
-res://nod_configcode.gd
-res://nod_cloudcode.gd
-res://nod_spawner.gd
+res://n2d_world.gd
+res://n2d_dan.gd
 res://s2d_goose.gd
 res://nod_birdcode.gd
+res://nod_cloudcode.gd
+res://s2d_cloud_001.gd
+res://s2d_cloud_002.gd
+res://nod_dancode.gd

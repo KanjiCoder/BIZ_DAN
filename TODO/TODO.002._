@@ -1,0 +1,16 @@
+
+    TODO :
+    
+        1. Dan should not explode when he intercepts haystack
+
+        2. The invincibility period maybe should shake dan
+           too because somethings the flashing can't be
+           seen because of being out of vsync maybe ?
+        
+        3. Invincibility period should probably be shorter
+           the faster the level is moving . So as you
+           beat more levels , you get less invincibility
+           period.
+
+           OTHERWISE , you could be INVINCIBLE FOR THE
+           ENTIRE LEVEL , when the level is going fast .

@@ -2,6 +2,7 @@ extends Node
 
 var dan_var =( 200 )
 @onready var psr_dan = preload( "res://s2d_dan.tscn" )
+@onready var psr_boom : PackedScene = preload( "res://s2d_boom.tscn" )
 @onready var n2d_world : Node2D = get_tree().root.get_child(0)
 
 ## DONT DO THIS , IT MAKES IDEMPOTENTNESS OF READY FUCKING HARD ####
@@ -20,6 +21,16 @@ func DANFUNC_INI():
 func DANFUNC_ready():
 	## DO NOTHING, MANUALLY MANAGE INITIALIZATION ORDER ##
 	pass
+
+func DANFUNC_kill_dan_with_explosion( s2d_dan ) :
+
+	var s2d_boom = psr_boom.instantiate()
+	s2d_dan =( n2d_world.DANDATA_s2d_dan )
+	s2d_boom.position.x =( s2d_dan.position.x )
+	s2d_boom.position.y =( s2d_dan.position.y )
+	n2d_world.add_child( s2d_boom )
+
+	n2d_world.WORLDFUNC_you_died()
 
 func DANFUNC_spawn_dan_at_start_position( ) :
 	pass
@@ -53,4 +64,5 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	## FOR_DAN_UPDATE_CODE_SEE[ n2d_dan.gd ] ##
 	pass

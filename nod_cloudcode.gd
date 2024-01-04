@@ -5,6 +5,49 @@ var CLOUDDATA_has_process_been_hit_at_least_once : int =( 0 )
 var CLOUDDATA_psr_cloud_001 : PackedScene = preload( "res://s2d_cloud_001.tscn")
 var CLOUDDATA_psr_cloud_002 : PackedScene = preload( "res://s2d_cloud_002.tscn")
 
+func CLOUDFUNC_err( i_msg : String ) :
+	print( "[_CLOUDFUNC_ERROR_]:" , i_msg )
+	
+
+func CLOUDFUNC_free_all_clouds(  ) :
+	for _i_ in range( 0 , (100-1) ) :
+		var s2d_cloud = n2d_world.WORLDDATA_array_cloud[ _i_ ]
+		if( null != s2d_cloud ) :
+			var dex =( s2d_cloud.m_manager_index )
+			if( dex != _i_ ) :
+				## Manager code is broken.
+				CLOUDFUNC_err( "[_DEX_NOT_EQUAL_TO_I_]" )
+			else :
+				n2d_world.WORLDDATA_array_cloud[ dex ] =( null )
+				s2d_cloud.queue_free( )
+
+func CLOUDFUNC_free_cloud( s2d_cloud ) :
+
+	var dex =( s2d_cloud.m_manager_index )
+	var quantum_cloud =( n2d_world.WORLDDATA_array_cloud[ dex ] )
+	if( quantum_cloud == s2d_cloud ) :
+
+		if( quantum_cloud.m_manager_index != s2d_cloud.m_manager_index ) :
+			CLOUDFUNC_err( "[_YOUR_MANAGING_CODE_IS_BROKEN_]" )
+		else :
+			n2d_world.WORLDDATA_array_cloud[ dex ] =( null )
+			s2d_cloud.queue_free( )
+			
+
+func CLOUDFUNC_add_cloud_to_cloud_manager( s2d_cloud ) :
+
+	## Add the cloud to managing array so we can  
+	## free them all when the time is right .
+	## Or... Instead of directly freeing them...
+	## We could just increase the velocity of all
+	## the clouds to rush them off screen.
+	n2d_world.add_child( s2d_cloud )
+	var dex = n2d_world.WORLDDATA_array_cloud_length
+	s2d_cloud.m_manager_index =( dex )
+	n2d_world.WORLDDATA_array_cloud[ dex ]=( s2d_cloud )
+	n2d_world.WORLDDATA_array_cloud_length +=( 1 )
+
+
 func CLOUDFUNC_spawn_cloud_by_percent( percent_x ) :
 	var s2d_cloud = null
 	var rand_0_1 =( randi_range(0,1)) 
@@ -15,7 +58,8 @@ func CLOUDFUNC_spawn_cloud_by_percent( percent_x ) :
 	var spawn_pos_x =(float( client_area.x - 1 ))*(float(percent_x))
 	s2d_cloud.offset.x =( spawn_pos_x )
 	s2d_cloud.offset.y =( spawn_pos_y )
-	n2d_world.add_child( s2d_cloud )
+	pass
+	CLOUDFUNC_add_cloud_to_cloud_manager( s2d_cloud )
 	
 func CLOUDFUNC_ping() :
 	print( "[_IAM_THE_CLOUD_AND_I_EXIST_]" )

@@ -16,6 +16,13 @@ extends Node2D
 ### 		 : instead of[ .offset ]
 ###
 ################################################################# TODO_NOTES ###
+### WE_CAN_SORT_THIS_LATER #####################################
+
+var WORLDDATA_invincible_grace_period_countdown : int =( 0 )
+
+
+
+##################################### WE_CAN_SORT_THIS_LATER ###
 ### MORE_WORLD_DATA ############################################################
 
 var WORLDDATA_has_hay : bool = false 
@@ -48,6 +55,18 @@ var WORLDDATA_array_explosion = [ null,null,null,null,null,null,null,null,null,n
 								, null,null,null,null,null,null,null,null,null,null
 								, null,null,null,null,null,null,null,null,null,null
 								]
+var WORLDDATA_array_cloud_length =( 0 )
+var WORLDDATA_array_cloud     = [ null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								, null,null,null,null,null,null,null,null,null,null
+								]
 
 ### ######################################################## MORE_WORLD_DATA ###
 ### FUCKING_HACKS ##############################################################
@@ -67,12 +86,17 @@ var WORLDDATA_has_process_been_hit_at_least_once : int =( 0 )
 
 func  WORLDFUNC_you_died( ) :
 	print( "[_WORLD_CODE_YOU_DIED_]" )
+	WORLDDATA_invincible_grace_period_countdown =( 100 )
 	WORLDCODE_reset_and_start_level()
 	pass
 
 func  WORLDCODE_reset_and_start_level( ) :
+
 	print( "[n2d_world.gd:Reset_And_Start_Level]")
-	nod_birdcode.BIRDFUNC_free_all_the_fucking_geese()
+
+	nod_birdcode .BIRDFUNC_free_all_the_fucking_geese()  
+	nod_cloudcode.CLOUDFUNC_free_all_clouds()
+
 	WORLDFUNC_ready() 
 
 # Called when the node enters the scene tree for the first time.
@@ -219,13 +243,26 @@ func WORLDFUNC_hay_show() :
 ## intersect with the hay stack .
 func WORLDFUNC_process_physics_falltime( ):
 
+	############################################################
+	## WHERE THE FUCK IS[ n2d_dan ] ?                  #########
+	## Must be a persistent instance that was designed #########
+	## into the scene instead of instantiated like     #########
+	## the geese and clouds.                           #########
+	##                                                 #########
+	## ANSWER : DANDATA_s2d_dan                        #########
+	##        : ( s2d_dan != n2d_dan )                 #########
+	############################################################
+
 	WORLDFUNC_hay_show() ## Show the hay , but animate into frame ##
 		
 	pass
 
 func WORLDFUNC_process_physics( ):
+
 	INPUTCODE_reset_key_cooldown -=( 1 )
+	WORLDDATA_invincible_grace_period_countdown -=( 1 )
 	WORLDDATA_game_time_in_ticks +=( 1 )
+
 	if( WORLDDATA_game_time_in_ticks >= WORLDDATA_game_duration_in_ticks ) :
 		WORLDDATA_game_time_in_ticks  = WORLDDATA_game_duration_in_ticks
 		pass

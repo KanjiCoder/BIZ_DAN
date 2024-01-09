@@ -25,9 +25,19 @@ func DANMETHOD_animate_dan( ) :
 
 		pass
 
+
 func DANMETHOD_maybe_dan_should_fall_maybe_he_shouldnt( ) :
 
-	if( n2d_world.WORLDDATA_percent_scroll >= 1.0 ) :
+	##TAG[ dan_fall | dan-fall | danfall ]######################
+
+	##  We want to look for a flag set by world data that says
+	##  dan should start falling , and that should be set
+	##  when the forground stops scrolling upwards .
+	##
+	##  if( n2d_world.WORLDDATA_percent_scroll >= 1.0 ) :
+	##  	self.position.y +=( n2d_world.nod_configcode.CONFIGDATA_fall_into_hay_speed )
+
+	if( n2d_world.WORLDDATA_dan_should_fall_down_screen_now ) :
 		self.position.y +=( n2d_world.nod_configcode.CONFIGDATA_fall_into_hay_speed )
 
 func DANMETHOD_maybe_dan_hit_the_ground_really_hard_and_should_die( ) :

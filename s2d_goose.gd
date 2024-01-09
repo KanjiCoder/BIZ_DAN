@@ -3,21 +3,22 @@ extends Sprite2D
 var psr_boom : PackedScene = preload( "res://s2d_boom.tscn" )
 var nod_dancode : Node =( null )
 var s2d_dan  : Sprite2D =( null )
-var goose_speed : int = 3
+var goose_speed : int = 0 ## SET IN INITIALIZER CODE ##
 var m_manager_index : int =( 0-1 )
 
-func _on_a2d_goose_body_entered( body ):
+func _on_a2d_goose_body_entered( body ): ## TAG[ _on_body_entered ] ##
+
+	s2d_dan =( n2d_world.DANDATA_s2d_dan )
+
+	if( true == n2d_world.nod_configcode.CONFIGDATA_god_mode_cant_touch_this ):
+		n2d_world.nod_dancode.DANFUNC_spawn_explosion_at_dan_location( s2d_dan )
+		return ## DAN IS GOD AND YOU CANNOT TOUCH GOD  ##
 
 	if( n2d_world.WORLDDATA_invincible_grace_period_countdown >= 1 ) :
+		n2d_world.nod_dancode.DANFUNC_spawn_explosion_at_dan_location( s2d_dan )
 		return ## DO NOT INTERACT IF INVINCIBLE PERIOD ##
 
-	print( "[_NEXT_TIME_GOOSE_COLLISION_CODE_HERE_]" )
-	## var s2d_boom = psr_boom.instantiate()
-	## s2d_dan =( n2d_world.DANDATA_s2d_dan )
-	## s2d_boom.position.x =( s2d_dan.position.x )
-	## s2d_boom.position.y =( s2d_dan.position.y )
-	## n2d_world.add_child( s2d_boom )
-	s2d_dan =( n2d_world.DANDATA_s2d_dan )
+
 	n2d_world.nod_dancode.DANFUNC_kill_dan_with_explosion( s2d_dan )
 
 	## This should be inside of the "KILL_DAN" function ##
@@ -48,6 +49,10 @@ func _physics_process( _delta ) :
 	pass
 	
 func _ready():
+
+	### JBI_021 : All Things Falling At Same Speed #############
+	n2d_world.nod_birdcode.GOOSEFUNC_init_goose_speed( self )
+
 	pass # Replace with function body.
 	
 func _process( _delta ):

@@ -4,9 +4,16 @@ extends Node
 var BIRDDATA_has_process_been_hit_at_least_once : int =( 0 )
 var BIRDDATA_psr_goose_001 : PackedScene = preload( "res://s2d_goose.tscn")
 
+func GOOSEFUNC_init_goose_speed( n2d_goose ) :
+
+	var fall_speed_in_pixels_per_frame_at_60fps=( 
+		n2d_world.nod_configcode.CONFIGDATA_fall_speed_in_pixels_per_frame_at_60fps
+	)
+	n2d_goose.goose_speed =( fall_speed_in_pixels_per_frame_at_60fps )
+
 func BIRDFUNC_free_all_the_fucking_geese( ) :
 	for _i_ in range( 0 , (100-1) ) :
-		print( "[_TODO_FREE_ALL_THE_GEESE_]" )
+		## print( "[_TODO_FREE_ALL_THE_GEESE_]" )
 		var quantum_goose =( n2d_world.WORLDDATA_array_goose[ _i_ ] )
 		if( null == quantum_goose ) :
 			pass ## No object to free , so don't ##

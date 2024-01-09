@@ -22,14 +22,15 @@ func DANFUNC_ready():
 	## DO NOTHING, MANUALLY MANAGE INITIALIZATION ORDER ##
 	pass
 
-func DANFUNC_kill_dan_with_explosion( s2d_dan ) :
-
+func DANFUNC_spawn_explosion_at_dan_location( s2d_dan ) :
 	var s2d_boom = psr_boom.instantiate()
 	s2d_dan =( n2d_world.DANDATA_s2d_dan )
 	s2d_boom.position.x =( s2d_dan.position.x )
 	s2d_boom.position.y =( s2d_dan.position.y )
 	n2d_world.add_child( s2d_boom )
 
+func DANFUNC_kill_dan_with_explosion( s2d_dan ) :
+	DANFUNC_spawn_explosion_at_dan_location( s2d_dan )
 	n2d_world.WORLDFUNC_you_died()
 
 func DANFUNC_spawn_dan_at_start_position( ) :

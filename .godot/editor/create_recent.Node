@@ -1,7 +1,9 @@
-Sprite2D
 CollisionShape2D
-CharacterBody2D
 Area2D
+Label
+RichTextLabel
+Sprite2D
+CharacterBody2D
 Node
 Node2D
 Panel

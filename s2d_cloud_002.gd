@@ -13,7 +13,10 @@ func _physics_process( _delta ) :
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	## cloudspeed = randi_range( 1 , 3 )
+
+	### JBI_021 : All Things Falling At Same Speed #############
+	n2d_world.nod_cloudcode.CLOUDFUNC_init_cloud_speed( self )
+
 	pass # Replace with function body.
 
 

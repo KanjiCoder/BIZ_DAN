@@ -1,12 +1,21 @@
 extends Node
 
 @onready var n2d_world : Node2D = get_tree().root.get_child(0)
+## @onready var nod_configcode= get_node("/root/N2D_WORLD/NOD_CONFIGCODE")
+
 var CLOUDDATA_has_process_been_hit_at_least_once : int =( 0 )
 var CLOUDDATA_psr_cloud_001 : PackedScene = preload( "res://s2d_cloud_001.tscn")
 var CLOUDDATA_psr_cloud_002 : PackedScene = preload( "res://s2d_cloud_002.tscn")
 
 func CLOUDFUNC_err( i_msg : String ) :
 	print( "[_CLOUDFUNC_ERROR_]:" , i_msg )
+
+func CLOUDFUNC_init_cloud_speed( n2d_cloud ) :
+
+	var fall_speed_in_pixels_per_frame_at_60fps=( 
+		n2d_world.nod_configcode.CONFIGDATA_fall_speed_in_pixels_per_frame_at_60fps
+	)
+	n2d_cloud.cloudspeed =( fall_speed_in_pixels_per_frame_at_60fps )
 	
 
 func CLOUDFUNC_free_all_clouds(  ) :
@@ -20,6 +29,19 @@ func CLOUDFUNC_free_all_clouds(  ) :
 			else :
 				n2d_world.WORLDDATA_array_cloud[ dex ] =( null )
 				s2d_cloud.queue_free( )
+
+	## JBI_021 #################################################
+	##                                                        ##
+	##  Cloud management code was broken.                     ##
+	##  So that probably means our bird management            ##
+	##  code is also broken. FIX BIRD MANAGEMENT IN[ JBI_022 ]##
+	##                                                        ##
+	############################################################
+	for _i_ in range( 0 , (100-1 ) ) :
+		n2d_world.WORLDDATA_array_cloud[ 0 ] =( null )
+	n2d_world.WORLDDATA_array_cloud_length =( 0 ) ## RESET LENGTH AFTER FREEING ALL ##
+
+	################################################# JBI_021 ##
 
 func CLOUDFUNC_free_cloud( s2d_cloud ) :
 
@@ -36,6 +58,10 @@ func CLOUDFUNC_free_cloud( s2d_cloud ) :
 
 func CLOUDFUNC_add_cloud_to_cloud_manager( s2d_cloud ) :
 
+	## If over capacity , start re-writing slots ##
+	if( n2d_world.WORLDDATA_array_cloud_length > 100 ) :
+		n2d_world.WORLDDATA_array_cloud_length =( 0 )
+
 	## Add the cloud to managing array so we can  
 	## free them all when the time is right .
 	## Or... Instead of directly freeing them...
@@ -50,9 +76,26 @@ func CLOUDFUNC_add_cloud_to_cloud_manager( s2d_cloud ) :
 
 func CLOUDFUNC_spawn_cloud_by_percent( percent_x ) :
 	var s2d_cloud = null
-	var rand_0_1 =( randi_range(0,1)) 
-	if( rand_0_1 == 0 ) : s2d_cloud = CLOUDDATA_psr_cloud_001.instantiate()
-	if( rand_0_1 == 1 ) : s2d_cloud = CLOUDDATA_psr_cloud_002.instantiate()
+
+	### JBI_021 ################################################
+	##                                                        ##
+	##  Josh wanted to get rid of the turd clouds .           ##
+	##                                                        ##
+	############################################################
+
+	var anti_turd =( n2d_world.nod_configcode.CONFIGDATA_get_those_turd_clouds_out_of_my_sight )
+	var cloud_1_2 ; ## NOT SET YET ##
+	if( anti_turd ) :
+		cloud_1_2 =( 1 )
+	else :
+		var rand_1_2 =( randi_range(1,2)) 
+		cloud_1_2 =( rand_1_2 )
+
+	if( cloud_1_2 == 1 ) : s2d_cloud = CLOUDDATA_psr_cloud_001.instantiate()
+	if( cloud_1_2 == 2 ) : s2d_cloud = CLOUDDATA_psr_cloud_002.instantiate()
+
+	################################################ JBI_021 ###
+
 	var client_area : Vector2i = DisplayServer.window_get_size( 0 )
 	var spawn_pos_y =(  client_area.y + 128 ) ## cloud fully off screen ##
 	var spawn_pos_x =(float( client_area.x - 1 ))*(float(percent_x))

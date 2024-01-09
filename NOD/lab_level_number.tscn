@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7wdkm28j24wh"]
+
+[ext_resource type="FontFile" uid="uid://6rbw8t4b5h6o" path="res://ASS/VCR_OSD_MONO_1.001.TTF" id="1_xg3fj"]
+
+[sub_resource type="Theme" id="Theme_pgeyl"]
+default_font = ExtResource("1_xg3fj")
+
+[node name="LAB_LEVEL_NUMBER" type="Label"]
+offset_right = 40.0
+offset_bottom = 23.0
+theme = SubResource("Theme_pgeyl")
+text = "00"
+horizontal_alignment = 1
+vertical_alignment = 1

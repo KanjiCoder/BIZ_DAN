@@ -1,8 +1,9 @@
-res://s2d_fg.tscn
-res://n2d_world.tscn
 res://s2d_hay.tscn
-res://n2d_world.gd
-res://n2d_dan.gd
 res://s2d_dan.tscn
 res://s2d_goose.tscn
-res://s2d_hay.gd
+res://NOD/lab_level_number.tscn
+res://n2d_world.gd
+res://NOD/m2d_level_number.tscn
+res://nod_dancode.gd
+res://NOD/m2d_dan.tscn
+res://NOD/rec_level_number.tscn

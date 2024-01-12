@@ -40,13 +40,27 @@ func DANMETHOD_maybe_dan_should_fall_maybe_he_shouldnt( ) :
 	if( n2d_world.WORLDDATA_dan_should_fall_down_screen_now ) :
 		self.position.y +=( n2d_world.nod_configcode.CONFIGDATA_fall_into_hay_speed )
 
+##============================================================##
+
 func DANMETHOD_maybe_dan_hit_the_ground_really_hard_and_should_die( ) :
 
 	var client_area : Vector2i = DisplayServer.window_get_size( 0 )
 	var bottom_edge =( client_area.y - 1 )
+
+	############################################################
+	## We've hit rock bottom , no further to go here .        ##
+	############################################################
 	if( self.position.y >=( bottom_edge - 32 ) ) :
+
 		var s2d_dan =( self )
-		n2d_world.nod_dancode.DANFUNC_kill_dan_with_explosion( s2d_dan )
+
+		if( n2d_world.WORLDDATA_has_dan_hit_the_hay_this_level >= 1 ) :
+
+			n2d_world.WORLDFUNC_win_level()
+		else :
+			n2d_world.nod_dancode.DANFUNC_kill_dan_with_explosion( s2d_dan )
+
+##============================================================##
 
 func _physics_process( _delta ) :
 	##if( self.offset.x != 0 ) :

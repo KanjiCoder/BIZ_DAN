@@ -24,6 +24,6 @@ debug_color = Color(0.505882, 1, 0.25098, 1)
 position = Vector2(-5.75, 2)
 shape = SubResource("RectangleShape2D_2up5u")
 
-[connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a2d_goose_body_entered"]
 [connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a_2d_goose_body_entered"]
+[connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a2d_goose_body_entered"]
 [connection signal="body_shape_entered" from="A2D_GOOSE" to="." method="_on_a2d_goose_body_shape_entered"]

@@ -1,14 +1,21 @@
 extends Node
 
 var dan_var =( 200 )
-@onready var psr_dan = preload( "res://s2d_dan.tscn" )
+@onready var psr_dan     = preload( "res://s2d_dan.tscn" )
+@onready var psr_m2d_dan = preload( "res://NOD/m2d_dan.tscn" )
+
 @onready var psr_boom : PackedScene = preload( "res://s2d_boom.tscn" )
 @onready var n2d_world : Node2D = get_tree().root.get_child(0)
 
 ## DONT DO THIS , IT MAKES IDEMPOTENTNESS OF READY FUCKING HARD ####
 ## @onready var DANDATA_s2d_dan   : Sprite2D = psr_dan.instantiate()
 var DANDATA_s2d_dan : Sprite2D =( null )
+var DANDATA_m2d_dan : Marker2D =( null )
 var DANDATA_number_of_dans : int =( 0 )
+
+func MSG( i_msg : String ) :
+	print( "[ nod_dancode.gd ]:" , i_msg )
+	pass
 
 func DANFUNC_err( i_err_msg : String ):
 	print( i_err_msg )
@@ -30,6 +37,7 @@ func DANFUNC_spawn_explosion_at_dan_location( s2d_dan ) :
 	n2d_world.add_child( s2d_boom )
 
 func DANFUNC_kill_dan_with_explosion( s2d_dan ) :
+	MSG( "[ kill_dan_with_explosion( s2d_dan ) ]" )
 	DANFUNC_spawn_explosion_at_dan_location( s2d_dan )
 	n2d_world.WORLDFUNC_you_died()
 
@@ -39,8 +47,14 @@ func DANFUNC_spawn_dan_at_start_position( ) :
 	DANFUNC_print_number_of_dans()
 	pass
 	var client_area : Vector2i = DisplayServer.window_get_size( 0 )
+
 	DANDATA_s2d_dan.position.x =( client_area.x / 2 )
 	DANDATA_s2d_dan.position.y =( 128 )
+
+	## Make dummy marker stay on dan's origin ##<<<<<<<<<<<<<<<< [ JBI_025 ]
+	DANDATA_m2d_dan.position.x =( DANDATA_s2d_dan.position.x )
+	DANDATA_m2d_dan.position.y =( DANDATA_s2d_dan.position.y )
+
 	pass
 
 func DANFUNC_print_number_of_dans( ):
@@ -56,6 +70,12 @@ func DANFUNC_create_dan_if_dan_not_exist( ):
 		DANFUNC_print_number_of_dans()
 		if( DANDATA_number_of_dans > 1 ):
 			DANFUNC_err( "[_TOO_MANY_DANS_]" )
+
+	## Add a debug marker and see if we can see it ##
+	if( null == DANDATA_m2d_dan ) :
+		DANDATA_m2d_dan = psr_m2d_dan.instantiate()
+		n2d_world.add_child( DANDATA_m2d_dan )
+		n2d_world.DANDATA_m2d_dan =( DANDATA_m2d_dan )
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

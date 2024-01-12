@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://bpppjnkg0njrl"]
+
+[node name="M2D_DAN" type="Marker2D"]
+rotation = 2.23926

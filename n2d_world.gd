@@ -18,14 +18,25 @@ extends Node2D
 ################################################################# TODO_NOTES ###
 ### WE_CAN_SORT_THIS_LATER #####################################
 
-var WORLDDATA_current_level_number : int =( 1 )
 
-var WORLDDATA_invincible_grace_period_countdown : int =( 0 )
-var WORLDDATA_hay_hill_spawn_percent_marker : float =( 0.0 )
+const WORLDDATA_increment_score_display_cooldown  : String = "[ YOU MEAN : LEVEL NUMBER NOT SCORE ]"
+var   WORLDDATA_increment_level_display_cooldown  : int =(  0  )
+
+
+var WORLDDATA_has_dan_hit_the_hay_this_level    : int   =(  0  )
+var WORLDDATA_invincible_grace_period_countdown : int   =(  0  )
+var WORLDDATA_hay_hill_spawn_percent_marker     : float =( 0.0 )
 
 
 ##################################### WE_CAN_SORT_THIS_LATER ###
 ### MORE_WORLD_DATA ############################################################
+
+var     WORLDDATA_hay_cooldown         = 0
+const   WORLDDATA_hay_cool_it          = "[ USE : WORLDDATA_hay_cooldown ]"
+
+var   WORLDDATA_level                = 1  ## Starting level is 1 ##
+const WORLDDATA_current_level_number = "[ USE : WORLDDATA_level ]"
+const WORLDDATA_level_number         = "[ USE : WORLDDATA_level ]"
 
 var WORLDDATA_dan_should_fall_down_screen_now : bool = false
 
@@ -80,6 +91,7 @@ var WORLDDATA_array_cloud     = [ null,null,null,null,null,null,null,null,null,n
 ### FUCKING_HACKS ##############################################################
 
 var DANDATA_s2d_dan : Sprite2D = null 
+var DANDATA_m2d_dan : Marker2D = null
 
 ############################################################## FUCKING_HACKS ###
 ### MAINCODE ##################################################--###############
@@ -92,8 +104,15 @@ var DANDATA_s2d_dan : Sprite2D = null
 
 var WORLDDATA_has_process_been_hit_at_least_once : int =( 0 )
 
+
+func  WORLDFUNC_win_level( ) :
+	WORLDDATA_level +=( 1 )
+	WORLDCODE_reset_and_start_level( )
+	pass
+
 func  WORLDFUNC_you_died( ) :
 	print( "[_WORLD_CODE_YOU_DIED_]" )
+	WORLDDATA_level =( 1 ) ## Back To Level One You Fucking Loser ##
 	WORLDDATA_invincible_grace_period_countdown =( 100 )
 	WORLDCODE_reset_and_start_level()
 	pass
@@ -132,11 +151,16 @@ func _physics_process( _delta ) :
 pass
 var WORLDDATA_n2d_world : Node2D = self 
 
-var WORLDDATA_psr_level_number : PackedScene = preload( "res://NOD/lab_level_number.tscn" )
+var WORLDDATA_psr_level_number     : PackedScene = preload( "res://NOD/lab_level_number.tscn" )
+var WORLDDATA_psr_m2d_level_number : PackedScene = preload( "res://NOD/m2d_level_number.tscn" )
+var WORLDDATA_psr_rec_level_number : PackedScene = preload( "res://NOD/rec_level_number.tscn" )
+
 var WORLDDATA_psr_background : PackedScene = preload( "res://s2d_background.tscn" )
 var WORLDDATA_psr_foreground : PackedScene = preload( "res://s2d_fg.tscn"         )
 
-var WORLDDATA_lab_level_number : Label = null
+var WORLDDATA_lab_level_number : Label         = null
+var WORLDDATA_m2d_level_number : Marker2D      = null 
+var WORLDDATA_rec_level_number : ReferenceRect = null
 
 var WORLDDATA_s2d_background : Sprite2D = null 
 var WORLDDATA_s2d_background_count : int =( 0 )
@@ -187,6 +211,18 @@ func WORLDFUNC_err( i_err_msg : String ) :
 	get_tree().quit() ## AKA : exit ##
 	pass
 
+func MSG( i_msg : String ) :
+	print( "[ n2d_world.gd ]:" , i_msg )
+	pass
+
+
+func WORLDFUNC_calc_level_number_font_size( ) :
+
+	var o_fontsiz : int =( 512 )
+
+	return( o_fontsiz ) 
+	pass
+
 func WORLDFUNC_calc_and_store_game_duration_in_ticks( ) :
 
 	## When we use our debug to skip to end of game ,         ##
@@ -196,10 +232,184 @@ func WORLDFUNC_calc_and_store_game_duration_in_ticks( ) :
 	var minutes = nod_configcode.CONFIGDATA_game_duration_in_minutes
 	WORLDDATA_game_duration_in_ticks =int( minutes * 60 * fps )
 
+##   DEBUGFUNC_increment_level_number_and_update_display
+func DEBUGFUNC_increment_level_number( ) :
+	
+	WORLDDATA_level +=( 1 )
+	WORLDFUNC_update_level_number_text( )
+	pass
+##  
+##   DEBUGFUNC_update_level_number_display_keep_level_number_same( ) :
+func DEBUGFUNC_update_level_number_centering( ) : 
+	
+	WORLDFUNC_update_level_number_value( )
+	pass
+
+func WORLDFUNC_update_level_number_text( ) :
+
+	## ONLY UPDATE THE TEXT ! NOT THE CENTERING CODE  ##
+
+	WORLDDATA_lab_level_number.text =( str( WORLDDATA_level ) )
+	if( WORLDDATA_lab_level_number.text.length() < 2 ) :
+		WORLDDATA_lab_level_number.text =(
+		"0" +
+		WORLDDATA_lab_level_number.text
+	)
+	
+func WORLDFUNC_make_that_number_fucking_huge ( ) :
+
+	## Why am I getting fucked because I[ RTFM ]. ###################
+	## ERROR : Invalid get index 'font_size' ( on base : 'Label' ) ##
+	## <Label>.get_label_settings( ) <-- DOESNT ACTUALLY FUCKING EXIST EVEN THOUGH IN DOCUMENTATION
+	## https://docs.godotengine.org/en/stable/classes/class_label.html
+	
+	var fontsiz : int = WORLDFUNC_calc_level_number_font_size()
+	
+	var lab_obj : Label = ( WORLDDATA_lab_level_number )
+	var labthem : Theme = lab_obj.theme
+	var lab_set : LabelSettings = lab_obj.label_settings
+	if( null == labthem ):
+		MSG( "[_FUCKING_NULL_THEME_]" )
+	else :
+		MSG( "[_HOW_DO_I_USE_SET_FONT_SIZE_]" )
+		labthem.set_default_font_size( fontsiz )
+		## labthem.set_font_size( )
+		
+	if( null == lab_set ):
+		MSG( "[_WHAT_THE_FUCKING_HELL_NULL_LABEL_SETTINGS_]")
+	else :
+		pass
+		## lab_set.font_size =( fontsiz )
+
+func WORLDFUNC_center_the_fucking_number( ) :
+
+	## THIS IS THE CORE CODE FUCKING UP OUR DAY . FIX IT! ##<<<< [ JBI_025 ]
+
+	## For this to work , you need the correct settings ####
+	## on your label , see this imgur post #################
+	## IMGUR[ https://imgur.com/bSf8DaN ]
+	## SUDO_CODE : <label>.Control.Anchor_Presets =[ Full_Rect ]
+	
+	var lab_obj : Label         = ( WORLDDATA_lab_level_number )
+	var m2d_obj : Marker2D      = ( WORLDDATA_m2d_level_number )
+	var rec_obj : ReferenceRect = ( WORLDDATA_rec_level_number )
+
+	## var client_area : Vector2i = DisplayServer.window_get_size( 0 )
+	var client_area : Vector2i = SCREENCODE_bug_cant_get_real_client_area_size()
+	var sceen_center_x =( client_area.x / 2 )
+	var sceen_center_y =( client_area.y / 2 )
+
+	lab_obj.vertical_alignment   =   VERTICAL_ALIGNMENT_CENTER  ##### [ JBI_025 ]
+	lab_obj.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER  ##### [ JBI_025 ]
+
+	## lab_obj.vertical_alignment   =   VERTICAL_ALIGNMENT_TOP     ##### [ JBI_025 ]
+	## lab_obj.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT    ##### [ JBI_025 ]
+
+	## lab_obj.size.x =( 400 ) 
+	## lab_obj.size.y =( 0 ) 
+
+
+	lab_obj.position.x =( sceen_center_x ) ## $_P_TWICE_$ ##
+	lab_obj.position.y =( sceen_center_y ) ## $_P_TWICE_$ ##
+
+	lab_obj.position.x =( sceen_center_x ) ## $_P_TWICE_$ ##
+	lab_obj.position.y =( sceen_center_y ) ## $_P_TWICE_$ ##
+
+	## BUG_IN_GODOT_001 ########################################
+	##                                                        ##
+	##  When the game starts up all you need to use is :      ##
+	##                                                        ##
+	##  lab_obj.position.x =( sceen_center_x )                ##
+	##  lab_obj.position.y =( sceen_center_y )                ##
+	##                                                        ##
+	##  To correctly center the object .                      ##
+	##  But later you need to subtract half the width         ##
+	##  and height of the object to center it ...             ##
+	##  Its like the[ Anchors_Preset ]just create more        ##
+	##  problems than they solve and maybe they should always ##
+	##  be set to[ TOP_LEFT ]if you want to avoid headaches   ##
+	##--------------------------------------------------------##
+
+	var lab_wid : int =( lab_obj.size.x )  ## [ JBI_025 ]
+	var lab_hig : int =( lab_obj.size.y )  ## [ JBI_025 ]
+	lab_obj.position.x =( sceen_center_x - ( lab_wid / 2 ) )  
+	lab_obj.position.y =( sceen_center_y - ( lab_hig / 2 ) ) 
+
+	######################################## BUG_IN_GODOT_001 ##
+
+	m2d_obj.position.x =( sceen_center_x ) ## DUMMY_PIVOT ##
+	m2d_obj.position.y =( sceen_center_y ) ## DUMMY_PIVOT ##
+
+	rec_obj.position.x =( sceen_center_x ) ## DUMMY_RECTA ##
+	rec_obj.position.y =( sceen_center_y ) ## DUMMY_RECTA ##
+
+	########################################################
+	##                                                    ##
+	##  Seeing : [ 576 , 324 ] each time .                ##
+	##  This is confirming my suspicion that for some     ##
+	##  reason the anchor point of the label is getting   ##
+	##  reset somehow . Either being triggered by :       ##
+	##                                                    ##
+	##  Start checking off possibilities :                ##
+	##                                                    ##
+	##  _Y/N_ 1. Screen resize code resetting anchor points
+	##  __N__ 2. Setting .position twice resets anchors   ##
+	##  _Y/N_ 3. Something else                           ##
+	##                                                    ##
+	########################################################
+	print( "[_LAB_OBJ_._POS_._X_]:" , lab_obj.position.x );
+	print( "[_LAB_OBJ_._POS_._Y_]:" , lab_obj.position.y );
+
+
+func WORLDFUNC_update_level_number_value( ) :
+
+	##__ON_SCREEN_LEVEL_NUMBER_COUNTER__########################
+	##             TAG[ LEVEL_NUMBER_AS_BACKGROUND_ELEMENT ? ]##
+	##             TAG[ $_LEVEL_NUMBER_AS_BG_ELEMENT_$       ]##
+	##             TAG[ $_LEVEL_NUMBER_BG_$                  ]##
+
+	if( null == WORLDDATA_lab_level_number ) :
+		WORLDDATA_lab_level_number =( WORLDDATA_psr_level_number.instantiate() )
+		WORLDDATA_n2d_world.add_child( WORLDDATA_lab_level_number )
+
+	if( null == WORLDDATA_m2d_level_number ) :
+		WORLDDATA_m2d_level_number =( WORLDDATA_psr_m2d_level_number.instantiate() )
+		WORLDDATA_n2d_world.add_child( WORLDDATA_m2d_level_number )
+		########################################################
+		##                                                    ##
+		##  JBI_025 : The[ Marker2D ]is not showing up on     ##
+		##          : screen , yet we are in debug mode .     ##
+		##          : Is it an option like how we had to      ##
+		##          : make collision boxes visible ?          ##
+		##                                                    ##
+		##  THE_ANSWER_MAY_PISS_YOU_OFF[ imgur.com/a/dJ7aq9S ]##
+		##                                                    ##
+		########################################################
+
+	if( null == WORLDDATA_rec_level_number ) :
+		WORLDDATA_rec_level_number =( WORLDDATA_psr_rec_level_number.instantiate() )
+		WORLDDATA_n2d_world.add_child( WORLDDATA_rec_level_number )
+	
+	if( true ) : ## PUT_CORRECT_NUMBER : VVVVVVVVVVVVVVVVVVVV ##
+
+		WORLDFUNC_update_level_number_text( )
+
+	if( true ) : ## Make that number fucking huge !!!!!!!!!!! ##
+	
+		WORLDFUNC_make_that_number_fucking_huge ( )
+		
+	if( true ) : ## CENTER THE FUCKING NUMBER 
+
+		WORLDFUNC_center_the_fucking_number( )
+
+
+
+	########################__ON_SCREEN_LEVEL_NUMBER_COUNTER__##
 
 func WORLDFUNC_INI():
 
 	WORLDDATA_game_time_in_ticks =( 0 )
+	WORLDDATA_has_dan_hit_the_hay_this_level =( 0 )
 
 	## HACK[ KEEP_DAN_IN_FRONT_HACK / JBI_023 ]#################
 	WORLDFUNC_hay_hide( ) ## Hide hay stack at start of game ###
@@ -236,22 +446,22 @@ func WORLDFUNC_INI():
 	##                                                        ##
 	############################################################
 
-### if( null == WORLDDATA_s2d_foreground ):
-### 	WORLDDATA_s2d_foreground = WORLDDATA_psr_foreground.instantiate()
-### 	WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_foreground )
-### 	WORLDDATA_s2d_foreground_count +=( 1 )
-### 	if( WORLDDATA_s2d_foreground_count > 1 ) :
-### 		WORLDFUNC_err( "[_TOO_MANY_FOREGROUNDS_]" )
-### 	pass
-### 
-### 	### JBI_021 ############################################
-### 	## TEMPORARY HACK TO SEE TRANPARENCY AT TOP :
-### 	### fg_wid : float = WORLDDATA_s2d_foreground.texture.get_width()
-### 	var fg_hig : float = WORLDDATA_s2d_foreground.texture.get_height()
-### 	WORLDDATA_s2d_foreground.position.y =( fg_hig / 2 )
-### 	############################################ JBI_021 ###
-### 
-### pass
+	### if( null == WORLDDATA_s2d_foreground ):
+	### 	WORLDDATA_s2d_foreground = WORLDDATA_psr_foreground.instantiate()
+	### 	WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_foreground )
+	### 	WORLDDATA_s2d_foreground_count +=( 1 )
+	### 	if( WORLDDATA_s2d_foreground_count > 1 ) :
+	### 		WORLDFUNC_err( "[_TOO_MANY_FOREGROUNDS_]" )
+	### 	pass
+	### 
+	### 	### JBI_021 ############################################
+	### 	## TEMPORARY HACK TO SEE TRANPARENCY AT TOP :
+	### 	### fg_wid : float = WORLDDATA_s2d_foreground.texture.get_width()
+	### 	var fg_hig : float = WORLDDATA_s2d_foreground.texture.get_height()
+	### 	WORLDDATA_s2d_foreground.position.y =( fg_hig / 2 )
+	### 	############################################ JBI_021 ###
+	### 
+	### pass
 
 	################################################ JBI_021 ### 
 
@@ -266,23 +476,12 @@ func WORLDFUNC_INI():
 	## nod_dancode.DANFUNC_ready( )
 
 	#################################__REFACTORED_INTO_READY__##
-	##__ON_SCREEN_LEVEL_NUMBER_COUNTER__########################
-	##             TAG[ LEVEL_NUMBER_AS_BACKGROUND_ELEMENT ? ]##
-	##             TAG[ $_LEVEL_NUMBER_AS_BG_ELEMENT_$       ]##
-	##             TAG[ $_LEVEL_NUMBER_BG_$                  ]##
+	
+	## This works the first time , but when the level      #####
+	## resets , the text is no longer fucking centered !!! #####
+	WORLDFUNC_update_level_number_value( ) ## <-- $_IDEMPOTENT_$
+	WORLDFUNC_update_level_number_value( ) ## <-- $_IDEMPOTENT_$
 
-	if( null == WORLDDATA_lab_level_number ) :
-		WORLDDATA_lab_level_number =( WORLDDATA_psr_level_number.instantiate() )
-		WORLDDATA_n2d_world.add_child( WORLDDATA_lab_level_number )
-		WORLDDATA_lab_level_number.text =( str( WORLDDATA_current_level_number ) )
-		if( WORLDDATA_lab_level_number.text.length() < 2 ) :
-			WORLDDATA_lab_level_number.text =(
-			"0" +
-			WORLDDATA_lab_level_number.text
-		)
-
-
-	########################__ON_SCREEN_LEVEL_NUMBER_COUNTER__##
 	##__HILL_HAY_HACK__#########################################
 	##__   JBI_022   __#########################################
 
@@ -520,6 +719,7 @@ func WORLDFUNC_calculate_spawn_time_percent_for_hay_and_hill( ) :
 
 func WORLDFUNC_process_physics( ):
 
+	WORLDDATA_increment_level_display_cooldown -=( 1 )
 	INPUTCODE_reset_key_cooldown -=( 1 )
 	WORLDDATA_invincible_grace_period_countdown -=( 1 )
 	WORLDDATA_game_time_in_ticks +=( 1 )
@@ -725,6 +925,7 @@ func _on_viewport_size_changed( ):
 	SCREENCODE_collect_screen_settings()
 	SCREENCODE_snap_screen_to_collected_settings()
 	WORLDFUNC_update_world_object_scales()
+	## WORLDFUNC_update_level_number_value()
 	print ("Viewport size changed")
 	pass
 	
@@ -743,6 +944,7 @@ func SCREENCODE_make_window_full_screen( ) :
 	var FULLSCREEN : int = DisplayServer.WINDOW_MODE_FULLSCREEN 
 	DisplayServer.window_set_mode( FULLSCREEN  , window_id )
 	WORLDFUNC_update_world_object_scales()
+	## WORLDFUNC_update_level_number_value()
 	pass
 
 func SCREENCODE_exit_full_screen( ) :
@@ -751,6 +953,7 @@ func SCREENCODE_exit_full_screen( ) :
 	var WINDOWED : int = DisplayServer.WINDOW_MODE_WINDOWED
 	DisplayServer.window_set_mode( WINDOWED  , window_id )
 	WORLDFUNC_update_world_object_scales()
+	## WORLDFUNC_update_level_number_value()
 	pass
 
 func SCREENCODE_toggle_full_screen_on_off() :
@@ -767,8 +970,8 @@ func SCREENCODE_toggle_full_screen_on_off() :
 	if( int_window_mode == WINDOWED   ) : SCREENCODE_make_window_full_screen()
 	pass
 
-###############--################################################ SCREENCODE ###
-### INPUTCODE #################################################--###############
+###############--################################ SCREENCODE ###
+### INPUTCODE #################################--###############
 
 var INPUTCODE_reset_key_cooldown : int = 0 
 
@@ -785,15 +988,60 @@ func _input(event):
 	##	## p_rint("Mouse Motion at: ", event.position)
 
 func INPUTCODE_all_debug_controls_here( ) :
+	
+	############################################################
+	##                                                        ##
+	##  YOUR SHORTCUT SCRIPT ON YOUR COMPUTER BLOCKS THE      ##
+	##  ABILITY OF GODOT TO BE ABLE TO DETECT KEY DOWN !      ##
+	##                                                        ##
+	############################################################
+
+	var dcd =( 10 ) ## @dcd@ : Debug_Cool_Down ## <<<<<<<<<<<<<<  [ JBI_025 ]
+
+	var plus_equal_key_pressed = 0 
+	if Input.is_key_pressed( KEY_PLUS  ) : plus_equal_key_pressed = 1 
+	if Input.is_key_pressed( KEY_EQUAL ) : plus_equal_key_pressed = 1 
+
+	if( Input.is_key_pressed( KEY_C ) ) : 
+
+		if( WORLDDATA_increment_level_display_cooldown <= 0 ) :
+			WORLDDATA_increment_level_display_cooldown =( dcd )
+			WORLDFUNC_center_the_fucking_number( )
+			MSG( "[_IAM_THE_CENTER_OF_THE_UNIVERSE_FOR_IAM_C_]" )
+
+	if( Input.is_key_pressed( KEY_H ) ) : ## <<<<<<<<<<<<<<<<<<< [ JBI_025 ]
+
+		if( WORLDDATA_increment_level_display_cooldown <= 0 ) :
+			WORLDDATA_increment_level_display_cooldown =( dcd )
+			WORLDFUNC_make_that_number_fucking_huge( )
+			MSG( "[_IAM_FUCKING_HUGE_BITCH_]" )
+
+	if( plus_equal_key_pressed  ) : ## <<<<<<<<<<<<<<<<<<<<<<<<< [ JBI_025 ]
+
+		if( WORLDDATA_increment_level_display_cooldown <= 0 ) :
+			WORLDDATA_increment_level_display_cooldown =( dcd )
+			DEBUGFUNC_increment_level_number( )
+			MSG( "[_KEY_PLUS_EQUAL_PRESSED_]" )
+	
+	if Input.is_key_pressed( KEY_0  ) : ## <<<<<<<<<<<<<<<<<<<<< [ JBI_025 ]
+
+		if( WORLDDATA_increment_level_display_cooldown <= 0 ) :
+			WORLDDATA_increment_level_display_cooldown =( dcd )
+			DEBUGFUNC_update_level_number_centering( )
+			MSG( "[_KEY_ZERO_PRESSED_]" )
 
 	if Input.is_key_pressed( KEY_DOWN  ) :
 		if( true ) :
+			## TAG[ key-down | down_key | downkey ]#############
+			## TAG[ level_fast_forwarding_call_her ]############
+			MSG( "[_ABOUT_TO_CALL_FAST_FOWARD_DEBUG_]" )
 			WORLDFUNC_fast_forward_to_3_seconds_left( )
 		
 	if Input.is_key_pressed( KEY_R ) :
 		if( INPUTCODE_reset_key_cooldown <= 0 ) :
 			WORLDCODE_reset_and_start_level()
 			INPUTCODE_reset_key_cooldown = 15 
+
 	if Input.is_key_pressed( KEY_F ) :
 		if( SCREENCODE_full_screen_cooldown <= 0 ) :
 			SCREENCODE_full_screen_cooldown = 100
@@ -809,8 +1057,21 @@ func INPUTCODE_main_outermost_input_handler( ) :
 		INPUTCODE_all_debug_controls_here( )
 
 
-###############--################################################# INPUTCODE ###
+###############--################################# INPUTCODE ###
 
+
+## DOWN_ARROW_DEBUG ############################################
+##                                                            ##
+##  TAG[ down_arrow | down-arrow | downarrow ]                ##
+##  TAG[ down-key   | down_key   | downkey   ]                ##
+##                                                            ##
+##  Where is the code that manages the down arrow input       ##
+##  to fast forward to the end of the game ? I cannot find    ##
+##  it and it seems to be broken at the moment ?              ##
+##                                                            ##
+##  SEE[ INPUTCODE .____. all_debug_controls_here ]           ##
+##                                                            ##
+############################################ DOWN_ARROW_DEBUG ##
 ################################################################
 ##                                                            ##
 ## $_LEVEL_NUMBER_AS_BG_ELEMENT_$                             ##
@@ -877,3 +1138,56 @@ func INPUTCODE_main_outermost_input_handler( ) :
 ##                                                            ##
 ##                                                            ##
 #####################################__REFACTORED_INTO_READY__##
+## LEVEL_NUMBER_DISPLAY ########################################
+##                                                            ##
+##  TAG[ level-number-display | level_number_display ]        ##
+##  TAG[ levelnumberdisplay | level_display | leveldisplay ]  ##
+##  TAG[ big_digit | big-digit | bigdigit | big-diggy ]       ##
+##                                                            ##
+##  Where is the code that manages the level number display ? ##
+##                                                            ##
+##  SEE[ WORLDFUNC .____. update_level_number_value ]         ##
+##                                                            ##
+######################################## LEVEL_NUMBER_DISPLAY ##
+## $_IDEMPOTENT_$ ##############################################
+##                                                            ##
+## The line of code tagged with this can be called multiple   ##
+## times in a row , no problem .                              ##
+##                                                            ##
+## Right now the level number code is getting un-centered     ##
+## when the level resets and I have no fucking clue why.      ##
+## If I call the function immediately twice in a row          ##
+## the text is still centered , so something else is going    ##
+## on here .                                                  ##
+##                                                            ##
+############################################## $_IDEMPOTENT_$ ##
+## $_LABEL_CENTERING_BUG_$ #####################################
+## $_LABEL_CENTER_BUG_$    #####################################
+##                                                            ##
+## For some reason when I reset the level , the label         ##
+## sems to forget that it's anchor settings is supposed       ##
+## to be configured to[ FULL_RECTANGLE ].                     ##
+##                                                            ##
+## Or at least, that is my best guess as to what is           ##
+## going on , I really don't know .                           ##
+##                                                            ##
+#####################################    $_LABEL_CENTER_BUG_$ ##
+##################################### $_LABEL_CENTERING_BUG_$ ##
+## $_P_TWICE_$  ################################################
+##                                                            ##
+##  @P_TWICE@ : Position_TWICE                                ##
+##                                                            ##
+##  Does setting position property twice in a row cause       ##
+##  the label to become mal-aligned ? Find out here .         ##
+##                                                            ##
+################################################ $_P_TWICE_$  ##
+##  BUG_IN_GODOT_001  ##########################################
+##                                                            ##
+##  Maybe it's not a bug ... But holy fuck...                 ##
+##  Basically spent 2 days ( 4 hours total ) tying to         ##
+##  figure out why this control wouldn't center ...           ##
+##                                                            ##
+##  Maybe it's not a "bug" and "anchors preset" doesn't       ##
+##  do what you think it does .                               ##
+##                                                            ##
+##########################################  BUG_IN_GODOT_001  ##

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bcxleg5gp1kxk"]
+
+[node name="REC_LEVEL_NUMBER" type="ReferenceRect"]
+anchors_preset = -1
+offset_right = 11.0
+offset_bottom = 11.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+border_width = 5.0
+editor_only = false

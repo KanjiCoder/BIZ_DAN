@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bvwggiuwimnqy"]
+
+[node name="REC_CLIENT_AREA" type="ReferenceRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+border_width = 32.0
+editor_only = false

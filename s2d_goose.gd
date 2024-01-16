@@ -6,6 +6,8 @@ var s2d_dan  : Sprite2D =( null )
 var goose_speed : int = 0 ## SET IN INITIALIZER CODE ##
 var m_manager_index : int =( 0-1 )
 
+var m_goose_has_honked : int =( 0-1 )
+
 func _on_a2d_goose_body_entered( body ): ## TAG[ _on_body_entered ] ##
 
 	s2d_dan =( n2d_world.DANDATA_s2d_dan )
@@ -47,6 +49,13 @@ func _physics_process( _delta ) :
 	position.y -= goose_speed
 	if( position.y < (0-512) ) : GOOSEMETHOD_free_my_goose_to_the_afterlife() 
 	pass
+	pass
+	pass
+	var dan_position_y : int =( n2d_world.DANDATA_s2d_dan.position.y )
+	if( position.y <= ( dan_position_y + 256 ) ) :
+		if( m_goose_has_honked <= 0 ) :
+			m_goose_has_honked =  1 
+			$ASP_GOOSE.play( )
 	
 func _ready():
 

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://curkcu4rshkqw"]
+
+[ext_resource type="Texture2D" uid="uid://cewkxw82rn3q1" path="res://ASS/Intro_Anim.png" id="1_mjdmx"]
+
+[node name="S2D_FLAG" type="Sprite2D"]
+texture = ExtResource("1_mjdmx")
+hframes = 6

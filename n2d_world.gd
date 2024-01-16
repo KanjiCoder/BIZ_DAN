@@ -18,6 +18,17 @@ extends Node2D
 ################################################################# TODO_NOTES ###
 ### WE_CAN_SORT_THIS_LATER #####################################
 
+var   WORLDDATA_psr_ui : PackedScene = preload( "res://NOD/n2d_ui.tscn" ) ## [ JBI_027 ]
+var   WORLDDATA_n2d_ui : Node2D      =( null )                            ## [ JBI_027 ]
+var   WORLDDATA_has_ui : int         =(  0   )                            ## [ JBI_027 ]
+
+var   WORLDDATA_psr_client_area : PackedScene   =preload( "res://NOD/rec_client_area.tscn" )
+var   WORLDDATA_rec_client_area : ReferenceRect =( null )
+var   WORLDDATA_has_client_area : int           =(  0   )
+
+var   WORLDDATA_are_we_on_the_opening_screen : int =( 1 )
+var   WORLDDATA_s2d_flag_frame_f32 =( 0.0 )
+var   WORLDDATA_s2d_flag_frame_i32 =( 0-1 )
 
 const WORLDDATA_increment_score_display_cooldown  : String = "[ YOU MEAN : LEVEL NUMBER NOT SCORE ]"
 var   WORLDDATA_increment_level_display_cooldown  : int =(  0  )
@@ -39,6 +50,10 @@ const WORLDDATA_current_level_number = "[ USE : WORLDDATA_level ]"
 const WORLDDATA_level_number         = "[ USE : WORLDDATA_level ]"
 
 var WORLDDATA_dan_should_fall_down_screen_now : bool = false
+
+var WORLDDATA_has_flag : int =( 0 )
+var WORLDDATA_s2d_flag : Sprite2D = null
+var WORLDDATA_psr_flag : PackedScene = preload( "res://NOD/s2d_flag.tscn" )
 
 var WORLDDATA_has_hay : bool = false 
 var WORLDDATA_s2d_hay : Sprite2D = null 
@@ -101,6 +116,7 @@ var DANDATA_m2d_dan : Marker2D = null
 @onready var nod_birdcode   = get_node( "NOD_BIRDCODE"   )
 @onready var nod_spawncode  = get_node( "NOD_SPAWNER"    )
 @onready var nod_dancode    = get_node( "NOD_DANCODE"    )
+######## var n2d_ui         = get_node( "N2D_UI"         ) <<<<< WRONG , NOT PART OF SCENE , instantiated
 
 var WORLDDATA_has_process_been_hit_at_least_once : int =( 0 )
 
@@ -206,8 +222,13 @@ pass
 ###############--################################################ SCREENCODE ###
 ### WORLDFUNC #################################################--###############
 
+
 func WORLDFUNC_err( i_err_msg : String ) :
 	print( "[_WORLDFUNC_ERROR_]:" , i_err_msg )
+	get_tree().quit() ## AKA : exit ##
+	pass
+func ERR( i_err_msg : String ) :
+	print( "[_WORLDFUNC_ERR_]:" , i_err_msg )
 	get_tree().quit() ## AKA : exit ##
 	pass
 
@@ -406,6 +427,22 @@ func WORLDFUNC_update_level_number_value( ) :
 
 	########################__ON_SCREEN_LEVEL_NUMBER_COUNTER__##
 
+func WORLDFUNC_make_sure_client_area_reference_rect_exists( ) :                      ## [ JBI_027 ] ##
+																					 ## [ JBI_027 ] ##
+		if( WORLDDATA_has_client_area <= 0 ) :                                       ## [ JBI_027 ] ##
+			WORLDDATA_has_client_area =( 1 )                                         ## [ JBI_027 ] ##
+			if( WORLDDATA_rec_client_area != null ) : ERR( "[_MEOWMIX_]" )           ## [ JBI_027 ] ##
+			WORLDDATA_rec_client_area =( WORLDDATA_psr_client_area.instantiate() )   ## [ JBI_027 ] ##
+			WORLDDATA_n2d_world.add_child( WORLDDATA_rec_client_area )               ## [ JBI_027 ] ##
+
+func WORLDFUNC_make_sure_ui_container_exists( ) :
+
+	if( WORLDDATA_has_ui <= 0 ) :
+		WORLDDATA_has_ui =( 1 )
+		if( WORLDDATA_n2d_ui != null ) : ERR( "[_UI_CONTAINER_ALREADY_EXIST_]" )
+		WORLDDATA_n2d_ui = ( WORLDDATA_psr_ui.instantiate() )
+		WORLDDATA_n2d_world.add_child( WORLDDATA_n2d_ui )  
+
 func WORLDFUNC_INI():
 
 	WORLDDATA_game_time_in_ticks =( 0 )
@@ -495,7 +532,9 @@ func WORLDFUNC_INI():
 	#########################################__   JBI_022   __##
 	#########################################__HILL_HAY_HACK__##
 
-
+	WORLDFUNC_make_sure_client_area_reference_rect_exists() #### <<<[ JBI_027 ]
+	WORLDFUNC_make_sure_ui_container_exists() ################## <<<[ JBI_027 ]
+	
 func WORLDFUNC_ready( ):
 
 	self.            WORLDFUNC_INI()
@@ -717,7 +756,79 @@ func WORLDFUNC_calculate_spawn_time_percent_for_hay_and_hill( ) :
 
 	WORLDDATA_hay_hill_spawn_percent_marker =( hsp )
 
-func WORLDFUNC_process_physics( ):
+func WORLDFUNC_increment_level_number_scroll_up_screen( ):
+
+	if( null == WORLDDATA_lab_level_number ) : return
+	var lab_obj : Label         = ( WORLDDATA_lab_level_number )
+	var speed : int = nod_configcode.CONFIGDATA_fall_speed_in_pixels_per_frame_at_60fps
+	lab_obj.position.y -=( speed / 3 )
+	pass
+
+func WORLDFUNC_center_sprite_on_screen( i_s2d : Sprite2D ) :
+	var client_area : Vector2i = SCREENCODE_bug_cant_get_real_client_area_size()
+	var screen_center_x =( client_area.x / 2 )
+	var screen_center_y =( client_area.y / 2 )
+	i_s2d.position.x =( screen_center_x )
+	i_s2d.position.y =( screen_center_y )
+	pass
+
+func WORLDFUNC_scale_sprite_to_fill_screen( 
+
+	i_s2d     : Sprite2D 
+,   i_numcelx : int  ## $_NUMBER_OF_CELLS_ON_X_AXIS_$  <<<<<<<<<<<<<< [ JBI_027 ]
+,   i_numcely : int  ## $_NUMBER_OF_CELLS_ON_Y_AXIS_$  <<<<<<<<<<<<<< [ JBI_027 ]
+) :
+	if( ! ( i_numcelx >= 1 ) ) : ERR( "[_numcel_x_]" )
+	if( ! ( i_numcely >= 1 ) ) : ERR( "[_numcel_y_]" )
+	pass
+	pass ## TAG[ our-flag-means-fun | our_flag_means_fun  ] ##<< [ JBI_027 ]
+	pass ## TAG[ ourflagmeansfun    | fill-fucking-screen ] ##<< [ JBI_027 ]
+	pass
+	var client_area : Vector2i = SCREENCODE_bug_cant_get_real_client_area_size()
+	var cli_wid : float =( client_area.x * 1 )
+	var cli_hig : float =( client_area.y * 1 )
+	pass
+	var s2d_wid : float =( i_s2d.texture.get_width( ) / i_numcelx )
+	var s2d_hig : float =( i_s2d.texture.get_height() / i_numcely )
+	pass
+	var gap_wid : int =( cli_wid - s2d_wid )
+	var gap_hig : int =( cli_hig - s2d_hig )
+	pass
+	var ska         : float =( 1.0 )
+	pass
+	if(   gap_wid <= gap_hig ) :  ## ( s2d_wid * ska = cli_wid )
+		pass                      ## ska =( cli_wid / s2d_wid )
+		ska =( cli_wid / s2d_wid )
+		 
+	elif( gap_hig <= gap_wid ) :  ## ( s2d_hig * ska = cli_hig )
+		pass                      ## ska =( cli_hig / s2d_hig )
+		ska =( cli_hig / s2d_hig )
+	pass
+	
+	pass
+	i_s2d.scale.x =( ska )
+	i_s2d.scale.y =( ska )
+	pass
+
+func WORLDFUNC_process_physics_menu( ) :
+
+	if( WORLDDATA_has_flag <= 0 ) :
+		if( null != WORLDDATA_s2d_flag ) : ERR( "[_MEMORY_LEAKING_]" )
+		WORLDDATA_has_flag =( 1 )
+		WORLDDATA_s2d_flag =( WORLDDATA_psr_flag.instantiate() )
+		WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_flag )
+	pass
+	WORLDFUNC_center_sprite_on_screen(     WORLDDATA_s2d_flag )
+	WORLDFUNC_scale_sprite_to_fill_screen( WORLDDATA_s2d_flag , 6 , 1 )
+	pass
+	WORLDDATA_s2d_flag_frame_f32 +=( 0.25 )
+	WORLDDATA_s2d_flag_frame_i32 =( int( WORLDDATA_s2d_flag_frame_f32 ) )
+	WORLDDATA_s2d_flag_frame_i32 = WORLDDATA_s2d_flag_frame_i32 % 6
+	WORLDDATA_s2d_flag.frame =( WORLDDATA_s2d_flag_frame_i32 )
+
+
+func WORLDFUNC_process_physics_game( ) :
+	WORLDFUNC_increment_level_number_scroll_up_screen() 
 
 	WORLDDATA_increment_level_display_cooldown -=( 1 )
 	INPUTCODE_reset_key_cooldown -=( 1 )
@@ -748,6 +859,26 @@ func WORLDFUNC_process_physics( ):
 	WORLDFUNC_calculate_spawn_time_percent_for_hay_and_hill()
 	if( WORLDDATA_percent_scroll >= WORLDDATA_hay_hill_spawn_percent_marker ) :
 		WORLDFUNC_process_physics_falltime()
+
+	pass
+
+func WORLDFUNC_hide_the_flag( ) :
+	if( WORLDDATA_has_flag ) :
+		WORLDDATA_s2d_flag.visible =( false ) 
+
+func WORLDFUNC_show_the_flag( ) :
+	if( WORLDDATA_has_flag ) :
+		WORLDDATA_s2d_flag.visible =( true ) 
+
+func WORLDFUNC_process_physics( ):
+
+	if( WORLDDATA_are_we_on_the_opening_screen >= 1 ) :
+		WORLDFUNC_show_the_flag( )
+		WORLDFUNC_process_physics_menu( )
+	else :
+		WORLDFUNC_hide_the_flag( )
+		WORLDFUNC_process_physics_game( )
+
 
 func WORLDFUNC_update_world_object_scales( ) :
 
@@ -879,6 +1010,23 @@ func SCREENCODE_bug_cant_get_real_client_area_size( ) : ## <---  [ WTF_001 ] ##
 		client_size.x = client_returns_0_0.x
 		client_size.y = client_returns_0_0.y
 
+	## JBI_027 #################################################
+	##                                                        ##
+	##  Debug this client area by setting a reference         ##
+	##  rectangle to the size of the client area rectangle    ##
+	##  that we are returning .   DATE[ 2024_JAN_16 ]         ##
+	##--------------------------------------------------------##
+	if( null != WORLDDATA_rec_client_area ):
+		
+		WORLDDATA_rec_client_area.position.x =( 0 ) 
+		WORLDDATA_rec_client_area.position.y =( 0 ) 
+
+		WORLDDATA_rec_client_area.size.x =( client_size.x ) 
+		WORLDDATA_rec_client_area.size.y =( client_size.y ) 
+		
+	pass
+	################################################# JBI_027 ##
+
 	return client_size  ## iv2_client_size ##
 
 ##################################################### JBI_021 ##
@@ -1002,6 +1150,25 @@ func INPUTCODE_all_debug_controls_here( ) :
 	if Input.is_key_pressed( KEY_PLUS  ) : plus_equal_key_pressed = 1 
 	if Input.is_key_pressed( KEY_EQUAL ) : plus_equal_key_pressed = 1 
 
+	if( Input.is_key_pressed( KEY_0 ) ) :
+		WORLDDATA_n2d_ui.UIFUNC_hide_menu()
+		pass
+	if( Input.is_key_pressed( KEY_1 ) ) :
+		WORLDDATA_n2d_ui.UIFUNC_show_menu_start()
+		pass
+	if( Input.is_key_pressed( KEY_2 ) ) :
+		WORLDDATA_n2d_ui.UIFUNC_show_menu_win()
+		pass
+	if( Input.is_key_pressed( KEY_3 ) ) :
+		WORLDDATA_n2d_ui.UIFUNC_show_menu_lose()
+		pass
+
+
+	if( Input.is_key_pressed( KEY_M ) ) :               ## <<<<<  [ JBI_026 ]
+		WORLDDATA_are_we_on_the_opening_screen =( 1 )   ## <<<<<  [ JBI_026 ]
+	if( Input.is_key_pressed( KEY_G ) ) :               ## <<<<<  [ JBI_026 ]
+		WORLDDATA_are_we_on_the_opening_screen =( 0 )   ## <<<<<  [ JBI_026 ]
+
 	if( Input.is_key_pressed( KEY_C ) ) : 
 
 		if( WORLDDATA_increment_level_display_cooldown <= 0 ) :
@@ -1023,7 +1190,7 @@ func INPUTCODE_all_debug_controls_here( ) :
 			DEBUGFUNC_increment_level_number( )
 			MSG( "[_KEY_PLUS_EQUAL_PRESSED_]" )
 	
-	if Input.is_key_pressed( KEY_0  ) : ## <<<<<<<<<<<<<<<<<<<<< [ JBI_025 ]
+	if Input.is_key_pressed( KEY_D  ) : ## <<<<<<<<<<<<<<<<<<<<< [ JBI_027 ][ JBI_025 ]
 
 		if( WORLDDATA_increment_level_display_cooldown <= 0 ) :
 			WORLDDATA_increment_level_display_cooldown =( dcd )
@@ -1191,3 +1358,18 @@ func INPUTCODE_main_outermost_input_handler( ) :
 ##  do what you think it does .                               ##
 ##                                                            ##
 ##########################################  BUG_IN_GODOT_001  ##
+##  $_NUMBER_OF_CELLS_ON_X_AXIS_$  #############################
+##  $_NUMBER_OF_CELLS_ON_Y_AXIS_$  #############################
+##                                                            ##
+##  Okay, so the problem is that we have an animated sprite   ##
+##  and we are centering it by using the texture size as      ##
+##  part of our calculation , but for our animated flag       ##
+##  animation , we only see 1/9 of the texture because        ##
+##  the texture is an animation strip .                       ##
+##                                                            ##
+##  THE FIX : We need to provide how many cells the texture   ##
+##          : of the graphic has been split into on the       ##
+##          : x and y axis to fix our calculations .          ##
+##                                                            ##
+#############################  $_NUMBER_OF_CELLS_ON_Y_AXIS_$  ##
+#############################  $_NUMBER_OF_CELLS_ON_X_AXIS_$  ##

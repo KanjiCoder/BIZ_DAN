@@ -17,7 +17,8 @@ var boom_frame : int = (0-1)
 func _physics_process( _delta ):
 	boom_frame += 1
 	self.set_frame( boom_frame ) 
-	if( boom_frame >= 11 ): self.queue_free()
+	if( boom_frame >= 11 ): self.visible = false 
+	if( boom_frame >= 30 ): self.queue_free()
 	pass
 
 	## JBI_021 #################################################
@@ -44,6 +45,7 @@ func _physics_process( _delta ):
 	
 func _ready():
 	self.set_rotation_degrees( randi_range(0,360) );
+	$ASP_BOOM.play()
 	pass # Replace with function body.
 
 func _process(delta):

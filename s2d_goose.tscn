@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://c4r07ou83ruu2"]
+[gd_scene load_steps=6 format=3 uid="uid://c4r07ou83ruu2"]
 
 [ext_resource type="Texture2D" uid="uid://c6tsl4x06ddx3" path="res://ASS/GOOSE.PNG" id="1_qv27f"]
 [ext_resource type="Script" path="res://s2d_goose.gd" id="2_gqdft"]
+[ext_resource type="AudioStream" uid="uid://m1u72mlhdje6" path="res://ASS/SND_HONK.MP3" id="3_7oncl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8okvh"]
 size = Vector2(55, 5)
@@ -24,6 +25,9 @@ debug_color = Color(0.505882, 1, 0.25098, 1)
 position = Vector2(-5.75, 2)
 shape = SubResource("RectangleShape2D_2up5u")
 
-[connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a_2d_goose_body_entered"]
+[node name="ASP_GOOSE" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_7oncl")
+
 [connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a2d_goose_body_entered"]
+[connection signal="body_entered" from="A2D_GOOSE" to="." method="_on_a_2d_goose_body_entered"]
 [connection signal="body_shape_entered" from="A2D_GOOSE" to="." method="_on_a2d_goose_body_shape_entered"]

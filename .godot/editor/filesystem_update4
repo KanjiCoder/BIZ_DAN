@@ -1,9 +1,8 @@
-res://s2d_hay.tscn
-res://s2d_dan.tscn
-res://s2d_goose.tscn
-res://NOD/lab_level_number.tscn
+res://NOD/s2d_flag.tscn
 res://n2d_world.gd
+res://n2d_world.tscn
+res://NOD/rec_client_area.tscn
+res://NOD/n2d_ui.tscn
 res://NOD/m2d_level_number.tscn
-res://nod_dancode.gd
-res://NOD/m2d_dan.tscn
-res://NOD/rec_level_number.tscn
+res://NOD/lab_level_number.tscn
+res://NOD/n2d_ui.gd

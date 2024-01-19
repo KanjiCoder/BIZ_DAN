@@ -1,15 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cl2chrel2rdtu"]
+[gd_scene load_steps=4 format=3 uid="uid://cl2chrel2rdtu"]
 
 [ext_resource type="Script" path="res://NOD/n2d_ui.gd" id="1_0fonq"]
 [ext_resource type="FontFile" uid="uid://6rbw8t4b5h6o" path="res://ASS/VCR_OSD_MONO_1.001.TTF" id="1_ff4wg"]
 
 [sub_resource type="Theme" id="Theme_1kk2r"]
-default_font = ExtResource("1_ff4wg")
-
-[sub_resource type="Theme" id="Theme_bltln"]
-default_font = ExtResource("1_ff4wg")
-
-[sub_resource type="Theme" id="Theme_i18jc"]
 default_font = ExtResource("1_ff4wg")
 
 [node name="N2D_UI" type="Node2D"]
@@ -30,7 +24,6 @@ offset_bottom = 23.0
 text = "! Business Man Dan !"
 
 [node name="LAB_MENU_START" type="Label" parent="N2D_MENU_START"]
-visible = false
 offset_right = 201.0
 offset_bottom = 81.0
 theme = SubResource("Theme_1kk2r")
@@ -44,18 +37,6 @@ offset_top = 63.0
 offset_right = 117.0
 offset_bottom = 86.0
 text = "Quit"
-
-[node name="BTN_MENU_START" type="Button" parent="N2D_MENU_START"]
-offset_right = 8.0
-offset_bottom = 8.0
-theme = SubResource("Theme_bltln")
-text = "! Start !"
-
-[node name="BTN_MENU_QUIT" type="Button" parent="N2D_MENU_START"]
-offset_right = 8.0
-offset_bottom = 8.0
-theme = SubResource("Theme_i18jc")
-text = "! Quit !"
 
 [node name="N2D_MENU_WIN" type="Node2D" parent="."]
 

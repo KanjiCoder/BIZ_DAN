@@ -26,9 +26,20 @@ var   WORLDDATA_psr_client_area : PackedScene   =preload( "res://NOD/rec_client_
 var   WORLDDATA_rec_client_area : ReferenceRect =( null )
 var   WORLDDATA_has_client_area : int           =(  0   )
 
-var   WORLDDATA_are_we_on_the_opening_screen : int =( 1 )
-var   WORLDDATA_s2d_flag_frame_f32 =( 0.0 )
-var   WORLDDATA_s2d_flag_frame_i32 =( 0-1 )
+###   REFACTOR : Put the splash screen into : N2D_UI
+###            : Make is so we can see this when pressing "S" for splash screen .
+
+### WORLDDATA_menu_mode_0_game_mode_1 : int =( 0 )
+var WORLDDATA_splash_0_menu_1_game_2  : int =( 0 )
+var WORLDDATA_menu_start_0_win_1_lose_2 : int =( 0 ) ########### [ JBI_028 ] NO_PAUSE
+
+var WORLDDATA_are_we_on_the_opening_screen : int =( 1 ) ##<<<< [ JBI_028 , KEEP THIS ONE    ]
+
+var WORLDDATA_s2d_flag_frame_f32 =( 0.0 )               ##<<<< [ JBI_028 , REFACTO : N2D_UI ]
+var WORLDDATA_s2d_flag_frame_i32 =( 0-1 )               ##<<<< [ JBI_028 , REFACTO : N2D_UI ]
+var WORLDDATA_has_flag : int =( 0 )                                          ## [ JBI_028 ]
+var WORLDDATA_s2d_flag : Sprite2D = null                                     ## [ JBI_028 ]
+var WORLDDATA_psr_flag : PackedScene = preload( "res://NOD/s2d_flag.tscn" )  ## [ JBI_028 ]
 
 const WORLDDATA_increment_score_display_cooldown  : String = "[ YOU MEAN : LEVEL NUMBER NOT SCORE ]"
 var   WORLDDATA_increment_level_display_cooldown  : int =(  0  )
@@ -51,9 +62,7 @@ const WORLDDATA_level_number         = "[ USE : WORLDDATA_level ]"
 
 var WORLDDATA_dan_should_fall_down_screen_now : bool = false
 
-var WORLDDATA_has_flag : int =( 0 )
-var WORLDDATA_s2d_flag : Sprite2D = null
-var WORLDDATA_psr_flag : PackedScene = preload( "res://NOD/s2d_flag.tscn" )
+
 
 var WORLDDATA_has_hay : bool = false 
 var WORLDDATA_s2d_hay : Sprite2D = null 
@@ -810,22 +819,33 @@ func WORLDFUNC_scale_sprite_to_fill_screen(
 	i_s2d.scale.y =( ska )
 	pass
 
+func WORLDFUNC_make_splash_screen_flag_if_not_exist( ) :
+
+	###################################################################### <<< [ JBI_028 ]
+	if( WORLDDATA_has_flag <= 0 ) :                                     ## <<< [ JBI_028 ]
+		if( null != WORLDDATA_s2d_flag ) : ERR( "[_MEMORY_LEAKING_]" )  ## <<< [ JBI_028 ]
+		WORLDDATA_has_flag =( 1 )                                       ## <<< [ JBI_028 ]
+		WORLDDATA_s2d_flag =( WORLDDATA_psr_flag.instantiate() )        ## <<< [ JBI_028 ]
+		WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_flag )             ## <<< [ JBI_028 ]
+	###################################################################### <<< [ JBI_028 ]
+
 func WORLDFUNC_process_physics_menu( ) :
 
-	if( WORLDDATA_has_flag <= 0 ) :
-		if( null != WORLDDATA_s2d_flag ) : ERR( "[_MEMORY_LEAKING_]" )
-		WORLDDATA_has_flag =( 1 )
-		WORLDDATA_s2d_flag =( WORLDDATA_psr_flag.instantiate() )
-		WORLDDATA_n2d_world.add_child( WORLDDATA_s2d_flag )
-	pass
-	WORLDFUNC_center_sprite_on_screen(     WORLDDATA_s2d_flag )
-	WORLDFUNC_scale_sprite_to_fill_screen( WORLDDATA_s2d_flag , 6 , 1 )
-	pass
-	WORLDDATA_s2d_flag_frame_f32 +=( 0.25 )
-	WORLDDATA_s2d_flag_frame_i32 =( int( WORLDDATA_s2d_flag_frame_f32 ) )
-	WORLDDATA_s2d_flag_frame_i32 = WORLDDATA_s2d_flag_frame_i32 % 6
-	WORLDDATA_s2d_flag.frame =( WORLDDATA_s2d_flag_frame_i32 )
+	WORLDFUNC_make_splash_screen_flag_if_not_exist( )
 
+	######################################################################################
+	## Refactoring into menu system ######################################################
+	###########################################################################[ JBI_028 ]
+	pass                                                                     ##[ JBI_028 ]
+	WORLDFUNC_center_sprite_on_screen(     WORLDDATA_s2d_flag )          ##[ JBI_028 ]
+	WORLDFUNC_scale_sprite_to_fill_screen( WORLDDATA_s2d_flag , 6 , 1 )  ##[ JBI_028 ]
+	pass                                                                     ##[ JBI_028 ]
+	##  PUT THIS INTO[ N2D_UI ]#################################             ##[ JBI_028 ]
+	WORLDDATA_s2d_flag_frame_f32 +=( 0.25 )                              ##[ JBI_028 ]
+	WORLDDATA_s2d_flag_frame_i32 =( int( WORLDDATA_s2d_flag_frame_f32 ) )##[ JBI_028 ]
+	WORLDDATA_s2d_flag_frame_i32 = WORLDDATA_s2d_flag_frame_i32 % 6      ##[ JBI_028 ]
+	WORLDDATA_s2d_flag.frame =( WORLDDATA_s2d_flag_frame_i32 )           ##[ JBI_028 ]
+	###########################################################################[ JBI_028 ]
 
 func WORLDFUNC_process_physics_game( ) :
 	WORLDFUNC_increment_level_number_scroll_up_screen() 
@@ -862,20 +882,45 @@ func WORLDFUNC_process_physics_game( ) :
 
 	pass
 
-func WORLDFUNC_hide_the_flag( ) :
-	if( WORLDDATA_has_flag ) :
-		WORLDDATA_s2d_flag.visible =( false ) 
+func WORLDFUNC_center_the_fucking_flag_on_screen( ) :
 
-func WORLDFUNC_show_the_flag( ) :
-	if( WORLDDATA_has_flag ) :
-		WORLDDATA_s2d_flag.visible =( true ) 
+	WORLDFUNC_make_splash_screen_flag_if_not_exist()
+	WORLDFUNC_center_sprite_on_screen(     WORLDDATA_s2d_flag )          ##[ JBI_028 ]
+	WORLDFUNC_scale_sprite_to_fill_screen( WORLDDATA_s2d_flag , 6 , 1 )  ##[ JBI_028 ]
+
+
+func WORLDFUNC_hide_the_flag( ) :   ## TAG[ HIDE_FLAG ]#########  [ JBI_028 ]
+	if( WORLDDATA_has_flag ) :                ###########<<< [ JBI_028 ]
+		WORLDDATA_s2d_flag.visible =( false ) ###########<<< [ JBI_028 ]
+	## MSG( "[_TODO_:_HIDE_THE_FLAG_]" );            ###########<<< [ JBI_028 ]
+	pass
+
+func WORLDFUNC_show_the_flag( ) :   ## TAG[ SHOW_FLAG ]######### [ JBI_028 ]
+
+	## IF I TOLD YOU TO SHOW THE FLAG , THEN SHOW THE FUCKING    [ JBI_028 ]
+	## GOD DAMNED FLAG , GO MAKE IT EXIST !!!!!!!!!!!!!!!!!!!    [ JBI_028 ]
+	WORLDFUNC_make_splash_screen_flag_if_not_exist( ) 
+
+	if( WORLDDATA_has_flag ) :                ###########<<< [ JBI_028 ]
+		WORLDDATA_s2d_flag.visible =( true )  ###########<<< [ JBI_028 ]
+ 
+		## My good dude , why the fuck do you
+		## think I would not want the flag centered on screen ?
+		WORLDFUNC_center_the_fucking_flag_on_screen( )
+
+
+	pass
 
 func WORLDFUNC_process_physics( ):
 
 	if( WORLDDATA_are_we_on_the_opening_screen >= 1 ) :
 		WORLDFUNC_show_the_flag( )
+		WORLDDATA_n2d_ui.UIFUNC_hide_menu()
+
+	if( 1 == WORLDDATA_splash_0_menu_1_game_2 ) :
 		WORLDFUNC_process_physics_menu( )
-	else :
+	
+	if( 2 == WORLDDATA_splash_0_menu_1_game_2 ) :
 		WORLDFUNC_hide_the_flag( )
 		WORLDFUNC_process_physics_game( )
 
@@ -1119,6 +1164,53 @@ func SCREENCODE_toggle_full_screen_on_off() :
 	pass
 
 ###############--################################ SCREENCODE ###
+### DISASTER_CODE ##############################################
+
+func    WORLDFUNC_log_game_state_flags( ) :
+	print( "[_ARE_WE_ON_OPENING_SCREEN_]" , WORLDDATA_are_we_on_the_opening_screen )
+	print( "[_SPLASH0_MENU1_GAME2_]"      , WORLDDATA_splash_0_menu_1_game_2       )
+	print( "[_START0_WIN1_LOSE2___]"      , WORLDDATA_menu_start_0_win_1_lose_2    )
+	print( "[_FLAG_MEANS_FUN_VISIBLE_]"   , WORLDDATA_s2d_flag.visible             )
+
+func    WORLDFUNC_close_splash_screen_if_open( ) : ## <<<<<<<<<<[ JBI_028 ]
+	WORLDDATA_are_we_on_the_opening_screen =( 0 )
+	WORLDFUNC_hide_the_flag( )
+
+func    WORLDFUNC_open_splash_screen( ) :
+	WORLDDATA_are_we_on_the_opening_screen =( 1 )
+	WORLDFUNC_show_the_flag( )
+	
+func    WORLDFUNC_splash_0_menu_1_game_2_update() :
+
+	## NOTS ####################################################
+
+	if( 0 != WORLDDATA_splash_0_menu_1_game_2 ) :
+		WORLDFUNC_close_splash_screen_if_open()
+
+	if( 1 != WORLDDATA_splash_0_menu_1_game_2 ) :
+		WORLDDATA_n2d_ui.UIFUNC_hide_menu()
+
+	#################################################### NOTS ##
+	## YESS ####################################################
+
+	if( 0 == WORLDDATA_splash_0_menu_1_game_2 ) :
+		## SPLASH SCREEN MODE
+		WORLDFUNC_open_splash_screen( )
+		pass
+
+	if( 1 == WORLDDATA_splash_0_menu_1_game_2 ) :
+		## MENU MODE , WHICH MENU NOT KNOWN
+		## WORLDDATA_n2d_ui.UIFUNC_handle_mouse_event( event )### SEE[ _input ]##[ JBI_028 ]
+		WORLDDATA_n2d_ui.UIFUNC_show_menu()
+		pass
+
+	if( 2 == WORLDDATA_splash_0_menu_1_game_2 ) :
+		## GAME MODE
+		pass
+
+	#################################################### YESS ##
+
+### ########################################## DISASTER_CODE ###
 ### INPUTCODE #################################--###############
 
 var INPUTCODE_reset_key_cooldown : int = 0 
@@ -1127,6 +1219,14 @@ func _input(event):
    # Mouse in viewport coordinates.
 	if event is InputEventMouseButton:
 		## p_rint("Mouse Click/Unclick at: ", event.position)
+		## WORLDFUNC_close_splash_screen_if_open( )            #### <<<< [ JBI_028 ]
+		## WORLDDATA_n2d_ui.UIFUNC_hide_menu()
+		if( 0 == WORLDDATA_splash_0_menu_1_game_2 ) :
+			## If on splash screen , go directly to game mode  
+			WORLDDATA_splash_0_menu_1_game_2 =( 2 )
+		pass
+		WORLDFUNC_splash_0_menu_1_game_2_update( )
+		WORLDDATA_n2d_ui.UIFUNC_handle_mouse_event( event ) #### <<<< [ JBI_028 ]
 		pass
 	elif event is InputEventMouseMotion:
 		## print("Mouse Motion at: ", event.position)
@@ -1163,11 +1263,24 @@ func INPUTCODE_all_debug_controls_here( ) :
 		WORLDDATA_n2d_ui.UIFUNC_show_menu_lose()
 		pass
 
+	if( Input.is_key_pressed( KEY_S ) ) :               ##<<<<<< [ JBI_028 ]( SPLASH_SCREEN )
+		WORLDDATA_splash_0_menu_1_game_2 =( 0 )
+		WORLDDATA_menu_start_0_win_1_lose_2 =( 0 )
+		WORLDFUNC_splash_0_menu_1_game_2_update( )
+		WORLDFUNC_log_game_state_flags( )
 
 	if( Input.is_key_pressed( KEY_M ) ) :               ## <<<<<  [ JBI_026 ]
-		WORLDDATA_are_we_on_the_opening_screen =( 1 )   ## <<<<<  [ JBI_026 ]
+		## WORLDDATA_are_we_on_the_opening_screen =( 1 )   ## <<<<<  [ JBI_026 ]
+		WORLDDATA_splash_0_menu_1_game_2 =(       1 )   ## <<<<<  [ JBI_028 ]
+		WORLDDATA_menu_start_0_win_1_lose_2 =(    0 )   ## <<<<<  [ JBI_028 ]
+		WORLDFUNC_splash_0_menu_1_game_2_update()
+		WORLDFUNC_log_game_state_flags( )
+
 	if( Input.is_key_pressed( KEY_G ) ) :               ## <<<<<  [ JBI_026 ]
-		WORLDDATA_are_we_on_the_opening_screen =( 0 )   ## <<<<<  [ JBI_026 ]
+		## WORLDDATA_are_we_on_the_opening_screen =( 0 )   ## <<<<<  [ JBI_026 ]
+		WORLDDATA_splash_0_menu_1_game_2 =(       2 )   ## <<<<<  [ JBI_028 ]
+		WORLDFUNC_splash_0_menu_1_game_2_update()
+		WORLDFUNC_log_game_state_flags( )
 
 	if( Input.is_key_pressed( KEY_C ) ) : 
 
@@ -1373,3 +1486,17 @@ func INPUTCODE_main_outermost_input_handler( ) :
 ##                                                            ##
 #############################  $_NUMBER_OF_CELLS_ON_Y_AXIS_$  ##
 #############################  $_NUMBER_OF_CELLS_ON_X_AXIS_$  ##
+## SHOW_FLAG ###################################################
+## HIDE_FLAG ###################################################
+##                                                            ##
+##  WHERE THE FUCK !? I SWEAR I HAD A "show_flag"             ##
+##                                    "hide_flag"             ##
+##  fucking function.                                         ##
+##                                                            ##
+##  Need to put :                                             ##
+##  WORLDFUNC_make_splash_screen_flag_if_not_exist            ##
+##                                                            ##
+##  In wherever that function is .                            ##
+##                                                            ##
+################################################### HIDE_FLAG ##
+################################################### SHOW_FLAG ##

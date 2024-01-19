@@ -54,12 +54,18 @@ func CLOUDFUNC_free_cloud( s2d_cloud ) :
 		else :
 			n2d_world.WORLDDATA_array_cloud[ dex ] =( null )
 			s2d_cloud.queue_free( )
-			
+	else :
+		## If not in our manager , we still need to fucking <<<< [ JBI_028 ]
+		## free it or else we are going to get a fucking    <<<< [ JBI_028 ]
+		## memory leak .                                    <<<< [ JBI_028 ]
+		s2d_cloud.queue_free( )
+				
 
 func CLOUDFUNC_add_cloud_to_cloud_manager( s2d_cloud ) :
 
-	## If over capacity , start re-writing slots ##
-	if( n2d_world.WORLDDATA_array_cloud_length > 100 ) :
+	## If over capacity       , start_re_writing_slots ### < < < [ JBI_028 ]
+	## If EXACTLY AT CAPACITY , start_re_writing_slots ### < < < [ JBI_028 ]
+	if( n2d_world.WORLDDATA_array_cloud_length >= 100 ) :
 		n2d_world.WORLDDATA_array_cloud_length =( 0 )
 
 	## Add the cloud to managing array so we can  

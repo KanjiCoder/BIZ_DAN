@@ -6,7 +6,7 @@ var m_manager_index : int =( 0-1 )
 
 func _physics_process( _delta ) :
 	offset.y -= cloudspeed
-	if( offset.y < (0-512) ) : 
+	if( offset.y < (0-256) ) : 
 		## self.queue_free()    
 		n2d_world.nod_cloudcode.CLOUDFUNC_free_cloud( self )
 	pass

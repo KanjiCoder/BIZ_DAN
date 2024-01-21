@@ -111,16 +111,10 @@ theme = SubResource("Theme_v1kxu")
 text = "! Quit !"
 
 [node name="REC_UI_BOUNDS" type="ReferenceRect" parent="."]
+visible = false
 offset_left = -63.0
 offset_top = 27.0
 offset_right = -23.0
 offset_bottom = 67.0
 border_color = Color(0.337255, 0.356863, 0, 1)
 border_width = 16.0
-
-[connection signal="pressed" from="N2D_MENU_START/BTN_MAIN_START" to="." method="_on_btn_main_start_pressed"]
-[connection signal="pressed" from="N2D_MENU_START/BTN_MAIN_QUIT" to="." method="_on_btn_main_quit_pressed"]
-[connection signal="pressed" from="N2D_MENU_WIN/BTN_WIN_RESTART" to="." method="_on_btn_win_restart_pressed"]
-[connection signal="pressed" from="N2D_MENU_WIN/BTN_WIN_QUIT" to="." method="_on_btn_win_quit_pressed"]
-[connection signal="pressed" from="N2D_MENU_LOSE/BTN_LOSE_RESTART" to="." method="_on_btn_lose_restart_pressed"]
-[connection signal="pressed" from="N2D_MENU_LOSE/BTN_LOSE_QUIT" to="." method="_on_btn_lose_quit_pressed"]

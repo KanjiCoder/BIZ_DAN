@@ -1,6 +1,4 @@
 res://NOD/n2d_ui.tscn
 res://NOD/m2d_level_number.tscn
 res://NOD/lab_level_number.tscn
-res://nod_cloudcode.gd
-res://n2d_world.gd
 res://NOD/n2d_ui.gd

@@ -1,10 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://cl2chrel2rdtu"]
+[gd_scene load_steps=9 format=3 uid="uid://cl2chrel2rdtu"]
 
 [ext_resource type="Script" path="res://NOD/n2d_ui.gd" id="1_0fonq"]
 [ext_resource type="FontFile" uid="uid://6rbw8t4b5h6o" path="res://ASS/VCR_OSD_MONO_1.001.TTF" id="1_ff4wg"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_tyxl8"]
-font = ExtResource("1_ff4wg")
 
 [sub_resource type="Theme" id="Theme_bltln"]
 default_font = ExtResource("1_ff4wg")
@@ -12,17 +9,11 @@ default_font = ExtResource("1_ff4wg")
 [sub_resource type="Theme" id="Theme_i18jc"]
 default_font = ExtResource("1_ff4wg")
 
-[sub_resource type="LabelSettings" id="LabelSettings_nsnd7"]
-font = ExtResource("1_ff4wg")
-
 [sub_resource type="Theme" id="Theme_8ak0w"]
 default_font = ExtResource("1_ff4wg")
 
 [sub_resource type="Theme" id="Theme_vpqb3"]
 default_font = ExtResource("1_ff4wg")
-
-[sub_resource type="LabelSettings" id="LabelSettings_2ur88"]
-font = ExtResource("1_ff4wg")
 
 [sub_resource type="Theme" id="Theme_w1y40"]
 default_font = ExtResource("1_ff4wg")
@@ -46,9 +37,6 @@ color = Color(0, 0, 0, 1)
 offset_right = 40.0
 offset_bottom = 23.0
 text = "! Business Man Dan !"
-label_settings = SubResource("LabelSettings_tyxl8")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="BTN_MAIN_START" type="Button" parent="N2D_MENU_START"]
 offset_right = 8.0
@@ -70,9 +58,6 @@ offset_top = 12.0
 offset_right = 120.0
 offset_bottom = 35.0
 text = "! Hooray !"
-label_settings = SubResource("LabelSettings_nsnd7")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="BTN_WIN_RESTART" type="Button" parent="N2D_MENU_WIN"]
 offset_right = 112.0
@@ -94,9 +79,6 @@ offset_top = 11.0
 offset_right = 139.0
 offset_bottom = 34.0
 text = "! Whoops !"
-label_settings = SubResource("LabelSettings_2ur88")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="BTN_LOSE_RESTART" type="Button" parent="N2D_MENU_LOSE"]
 offset_right = 8.0
@@ -111,16 +93,10 @@ theme = SubResource("Theme_v1kxu")
 text = "! Quit !"
 
 [node name="REC_UI_BOUNDS" type="ReferenceRect" parent="."]
+visible = false
 offset_left = -63.0
 offset_top = 27.0
 offset_right = -23.0
 offset_bottom = 67.0
 border_color = Color(0.337255, 0.356863, 0, 1)
 border_width = 16.0
-
-[connection signal="pressed" from="N2D_MENU_START/BTN_MAIN_START" to="." method="_on_btn_main_start_pressed"]
-[connection signal="pressed" from="N2D_MENU_START/BTN_MAIN_QUIT" to="." method="_on_btn_main_quit_pressed"]
-[connection signal="pressed" from="N2D_MENU_WIN/BTN_WIN_RESTART" to="." method="_on_btn_win_restart_pressed"]
-[connection signal="pressed" from="N2D_MENU_WIN/BTN_WIN_QUIT" to="." method="_on_btn_win_quit_pressed"]
-[connection signal="pressed" from="N2D_MENU_LOSE/BTN_LOSE_RESTART" to="." method="_on_btn_lose_restart_pressed"]
-[connection signal="pressed" from="N2D_MENU_LOSE/BTN_LOSE_QUIT" to="." method="_on_btn_lose_quit_pressed"]
